@@ -72,6 +72,11 @@ frame_labels = {33: "fshort", 33*5: "flong"}
 # npca_options = [[False, True]]  # 추가된 부분
 npca_options = [[False, True], [False, False]]  # 추가된 부분
 
+# === LLM Reward Designer Parameters ===
+LLM_MODEL = "claude-haiku-4-5-20251001"
+LLM_UPDATE_INTERVAL = 50   # episodes between LLM reward-design calls
+LLM_USE_MOCK = False        # set True to skip API calls during unit tests
+
 # 시뮬레이션 설정 생성
 simulation_configs = []
 for ch0 in sta_values:

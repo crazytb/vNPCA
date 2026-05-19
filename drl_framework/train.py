@@ -199,7 +199,142 @@ def train(env, policy_net, target_net, optimizer, device, num_episodes=50):
 
     return episode_rewards
 
-def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episode=1000, device=None, random_ppdu=False):
+def collect_network_stats(
+    episode_rewards: list,
+    decision_log: list,
+    simulator,
+    num_slots_per_episode: int,
+    current_epsilon: float,
+    current_episode: int,
+    num_episodes: int,
+    window: int = 50,
+) -> dict:
+    """
+    Collect network statistics for the LLM reward designer.
+    Called once every LLM_UPDATE_INTERVAL episodes inside train_semi_mdp().
+    """
+    win_rewards = episode_rewards[-window:] if len(episode_rewards) >= 1 else [0.0]
+    avg_reward = sum(win_rewards) / len(win_rewards)
+
+    recent_eps = [d for d in decision_log if d.get("episode", 0) >= current_episode - window]
+    n_decisions = len(recent_eps)
+
+    if n_decisions > 0:
+        npca_switches = sum(1 for d in recent_eps if d.get("action", 0) == 1)
+        npca_switch_ratio = npca_switches / n_decisions
+        tau_vals = [d["tau"] for d in recent_eps if "tau" in d]
+        avg_tau = sum(tau_vals) / len(tau_vals) if tau_vals else 1.0
+        # reward per decision (normalised back to per-slot scale)
+        rew_vals = [d["reward"] * num_slots_per_episode for d in recent_eps if "reward" in d]
+        avg_throughput = sum(max(0.0, r) for r in rew_vals) / max(1, len(rew_vals))
+    else:
+        npca_switch_ratio = 0.5
+        avg_tau = 10.0
+        avg_throughput = 0.0
+
+    # OBSS occupancy from the last episode's simulator log (channel_1 = primary)
+    if simulator.log:
+        obss_slots = sum(
+            1 for row in simulator.log if row.get("channel_1_obss_occupied_remained", 0) > 0
+        )
+        obss_rate = obss_slots / len(simulator.log)
+    else:
+        obss_rate = 0.03
+
+    return {
+        "window_episodes": window,
+        "obss_occupancy_rate": obss_rate,
+        "avg_episode_reward": avg_reward,
+        "npca_switch_ratio": npca_switch_ratio,
+        "avg_throughput_slots": avg_throughput,
+        "avg_option_duration": avg_tau,
+        "current_epsilon": current_epsilon,
+        "episode_progress": (current_episode + 1) / max(1, num_episodes),
+    }
+
+
+def run_baseline_simulation(
+    channels,
+    stas_config,
+    num_episodes: int = 100,
+    num_slots_per_episode: int = 1000,
+    fixed_action_fn=None,
+    random_ppdu: bool = False,
+    device=None,
+):
+    """
+    Run simulation with a fixed (non-DRL) action strategy.
+
+    fixed_action_fn: callable(sta) -> callable()
+        Given a STA, returns a zero-arg function that returns 0 or 1 each call.
+        Used for Always-NPCA, Never-NPCA, and rule-based baselines.
+    """
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    from drl_framework.random_access import STA, Simulator
+
+    episode_rewards = []
+    episode_throughputs = []          # reward-agnostic: successful TX slots of ch1 STAs
+    episode_avg_option_durations = [] # avg option duration (tau) per episode — latency proxy
+
+    for episode in range(num_episodes):
+        for ch in channels:
+            ch.intra_occupied = False
+            ch.intra_end_slot = 0
+            ch.obss_traffic = []
+            ch.occupied_remain = 0
+            ch.obss_remain = 0
+
+        episode_decision_log = []
+        stas = []
+        for config in stas_config:
+            sta = STA(
+                sta_id=config["sta_id"],
+                channel_id=config["channel_id"],
+                primary_channel=channels[config["channel_id"]],
+                npca_channel=channels[0] if config["channel_id"] == 1 else None,
+                npca_enabled=config.get("npca_enabled", False),
+                radio_transition_time=config.get("radio_transition_time", 1),
+                ppdu_duration=config.get("ppdu_duration", 33),
+                random_ppdu=random_ppdu,
+                learner=None,
+                num_slots_per_episode=num_slots_per_episode,
+            )
+            if config.get("npca_enabled", False) and fixed_action_fn is not None:
+                sta._fixed_action = fixed_action_fn(sta)
+                sta.decision_log = episode_decision_log
+                sta.current_episode = episode
+            stas.append(sta)
+
+        simulator = Simulator(num_slots=num_slots_per_episode, channels=channels, stas=stas)
+        # No replay memory for baselines; _finalize_pending handles memory=None gracefully
+        simulator.memory = None
+        simulator.device = device
+        simulator.run()
+
+        total_reward = sum(sta.new_episode_reward for sta in stas if sta.npca_enabled)
+        episode_rewards.append(total_reward)
+
+        # channel_occupancy_time: successful TX slots regardless of reward params
+        throughput = sum(sta.channel_occupancy_time for sta in stas if sta.channel_id == 1)
+        episode_throughputs.append(throughput)
+
+        # avg option duration (tau) per episode
+        tau_vals = [d["tau"] for d in episode_decision_log if "tau" in d]
+        ep_avg_tau = sum(tau_vals) / len(tau_vals) if tau_vals else 0.0
+        episode_avg_option_durations.append(ep_avg_tau)
+
+        if episode % 100 == 0:
+            avg_tp = sum(episode_throughputs[-10:]) / min(10, len(episode_throughputs))
+            avg_tau = sum(episode_avg_option_durations[-10:]) / min(10, len(episode_avg_option_durations))
+            print(f"  Episode {episode:3d}: Avg Throughput = {avg_tp:6.1f} slots, Avg Tau = {avg_tau:.1f}")
+
+    print("Baseline simulation completed!")
+    return episode_rewards, episode_throughputs, episode_avg_option_durations
+
+
+def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episode=1000, device=None, random_ppdu=False, llm_designer=None):
     """
     Semi-MDP를 사용한 NPCA STA 학습 함수
     
@@ -220,14 +355,28 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
     
     episode_rewards = []
     episode_losses = []
-    
+    episode_throughputs = []          # reward-agnostic: successful TX slots of ch1 STAs
+    episode_epsilons = []             # epsilon at start of each episode
+    episode_npca_ratios = []          # NPCA switch ratio per episode
+    episode_avg_losses = []           # average loss per episode
+    episode_avg_option_durations = [] # avg option duration (tau) per episode — latency proxy
+    llm_log = []                      # LLM reward-design call records
+
     # CSV 로깅을 위한 리스트들
     decision_log = []  # 모든 결정 시점 기록
-    
+
     print(f"Starting Semi-MDP training on {device}")
     print(f"Episodes: {num_episodes}, Slots per episode: {num_slots_per_episode}")
+    if llm_designer is not None:
+        print(f"LLM Reward Designer enabled (update every {llm_designer.update_interval} episodes, "
+              f"mock={llm_designer.use_mock})")
     
     for episode in range(num_episodes):
+        # epsilon at episode start
+        epsilon = EPS_END + (EPS_START - EPS_END) * math.exp(-1. * learner.steps_done / EPS_DECAY)
+        episode_epsilons.append(epsilon)
+        losses_before = len(episode_losses)
+
         # 채널 상태 초기화
         for ch in channels:
             ch.intra_occupied = False
@@ -271,12 +420,26 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
         for sta in stas:
             if sta.npca_enabled:
                 total_reward += sta.new_episode_reward
-            sta.new_episode_reward = 0.0 # Reset for next episode
-        
-        # normalized_reward = total_reward / num_slots_per_episode
-        normalized_reward = total_reward
-        episode_rewards.append(normalized_reward)
-        
+            sta.new_episode_reward = 0.0  # Reset for next episode
+
+        episode_rewards.append(total_reward)
+
+        # 처리량: 보상 파라미터와 무관한 ch1 STA의 성공 TX 슬롯 수
+        throughput = sum(sta.channel_occupancy_time for sta in stas if sta.channel_id == 1)
+        episode_throughputs.append(throughput)
+
+        # per-episode NPCA switch ratio and avg option duration
+        ep_decisions = [d for d in decision_log if d.get("episode") == episode]
+        if ep_decisions:
+            ep_npca = sum(1 for d in ep_decisions if d.get("action") == 1) / len(ep_decisions)
+            tau_vals = [d["tau"] for d in ep_decisions if "tau" in d]
+            ep_avg_tau = sum(tau_vals) / len(tau_vals) if tau_vals else 0.0
+        else:
+            ep_npca = 0.0
+            ep_avg_tau = 0.0
+        episode_npca_ratios.append(ep_npca)
+        episode_avg_option_durations.append(ep_avg_tau)
+
         # 학습 수행 - 빈도 증가로 학습 속도 개선
         if len(learner.memory) >= BATCH_SIZE:
             # 에피소드당 3번 학습으로 학습 속도 향상
@@ -284,21 +447,60 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
                 loss = learner.optimize_model()
                 if loss is not None:
                     episode_losses.append(loss)
-            
+
             # Target network를 매 에피소드마다 업데이트 (빈도 증가)
             learner.update_target_network()
+
+        # per-episode average loss
+        losses_this_ep = episode_losses[losses_before:]
+        episode_avg_losses.append(
+            sum(losses_this_ep) / len(losses_this_ep) if losses_this_ep else 0.0
+        )
         
+        # LLM reward designer 업데이트 (control plane: slow timescale)
+        if (llm_designer is not None
+                and episode > 0
+                and episode % llm_designer.update_interval == 0):
+            stats = collect_network_stats(
+                episode_rewards=episode_rewards,
+                decision_log=decision_log,
+                simulator=simulator,
+                num_slots_per_episode=num_slots_per_episode,
+                current_epsilon=epsilon,
+                current_episode=episode,
+                num_episodes=num_episodes,
+                window=llm_designer.update_interval,
+            )
+            new_params = llm_designer.design_reward_params(stats)
+            for sta in stas:
+                if sta.npca_enabled:
+                    sta.update_reward_params(
+                        throughput_weight=new_params["throughput_weight"],
+                        latency_penalty=new_params["latency_penalty"],
+                        npca_switch_bonus=new_params["npca_switch_bonus"],
+                    )
+            llm_entry = {
+                "episode": episode,
+                **new_params,
+                **{f"stat_{k}": v for k, v in stats.items()},
+            }
+            llm_log.append(llm_entry)
+            print(f"  [LLM] ep={episode}: tw={new_params['throughput_weight']:.3f}, "
+                  f"lp={new_params['latency_penalty']:.4f}, "
+                  f"sb={new_params['npca_switch_bonus']:.3f}, "
+                  f"qos={new_params['qos_priority']} | {new_params['reasoning']}")
+
         # 진행 상황 출력
         if episode % 10 == 0:
             avg_reward = sum(episode_rewards[-10:]) / min(10, len(episode_rewards))
-            avg_loss = sum(episode_losses[-10:]) / max(1, len(episode_losses[-10:]))
-            epsilon = EPS_END + (EPS_START - EPS_END) * math.exp(-1. * learner.steps_done / EPS_DECAY)
+            avg_tp = sum(episode_throughputs[-10:]) / min(10, len(episode_throughputs))
+            avg_loss = sum(episode_avg_losses[-10:]) / max(1, min(10, len(episode_avg_losses)))
             print(f"Episode {episode:3d}: Avg Reward = {avg_reward:6.2f}, "
-                  f"Avg Loss = {avg_loss:.4f}, Epsilon = {epsilon:.3f}, "
-                  f"Memory Size = {len(learner.memory)}")
+                  f"Throughput = {avg_tp:6.1f} slots, "
+                  f"Loss = {avg_loss:.4f}, Epsilon = {epsilon:.3f}")
     
     print("Training completed!")
-    
+
     # CSV 파일로 결정 로그 저장
     if decision_log:
         decision_df = pd.DataFrame(decision_log)
@@ -307,7 +509,13 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
         decision_df.to_csv(csv_path, index=False)
         print(f"Decision log saved to {csv_path}")
         print(f"Total decision points logged: {len(decision_log)}")
-    
+
+    learner.llm_log = llm_log
+    learner.episode_throughputs = episode_throughputs
+    learner.episode_epsilons = episode_epsilons
+    learner.episode_npca_ratios = episode_npca_ratios
+    learner.episode_avg_losses = episode_avg_losses
+    learner.episode_avg_option_durations = episode_avg_option_durations
     return episode_rewards, episode_losses, learner
 
 def train_semi_mdp_with_env(num_episodes=500, num_slots_per_episode=3000, device=None, random_env=True):

@@ -1,0 +1,21 @@
+[
+  {
+    "call_count": 1,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0,
+      "avg_episode_reward": 60.107,
+      "npca_switch_ratio": 0.6,
+      "avg_throughput_slots": 45233.57142857143,
+      "avg_option_duration": 401.3285714285714,
+      "current_epsilon": 0.842534746920056,
+      "episode_progress": 0.85
+    },
+    "throughput_weight": 1.0,
+    "latency_penalty": 0.055,
+    "npca_switch_bonus": 0.0,
+    "qos_priority": "latency",
+    "reasoning": "Mock: high avg_option_duration (401.3) \u2192 increased latency_penalty"
+  }
+]

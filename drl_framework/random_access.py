@@ -105,17 +105,20 @@ class Channel:
         return max(active, key=lambda x: x[1])
 
 class STA:
-    def __init__(self, 
-                 sta_id: int, 
-                 channel_id: int, 
-                 primary_channel: Channel, 
-                 npca_channel: Optional[Channel] = None, 
-                 npca_enabled: bool = False, 
+    def __init__(self,
+                 sta_id: int,
+                 channel_id: int,
+                 primary_channel: Channel,
+                 npca_channel: Optional[Channel] = None,
+                 npca_enabled: bool = False,
                  radio_transition_time: int = 1,
                  ppdu_duration: int = 10,
                  random_ppdu: bool = False,
                  learner=None,
-                 num_slots_per_episode: int = 1000):
+                 num_slots_per_episode: int = 1000,
+                 throughput_weight: float = 1.0,
+                 latency_penalty: float = 0.05,
+                 npca_switch_bonus: float = 0.0):
         self.sta_id = sta_id
         self.channel_id = channel_id
         self.primary_channel = primary_channel
@@ -125,6 +128,9 @@ class STA:
         self.random_ppdu = random_ppdu
         self.learner = learner
         self.num_slots_per_episode = num_slots_per_episode
+        self.throughput_weight = throughput_weight
+        self.latency_penalty = latency_penalty
+        self.npca_switch_bonus = npca_switch_bonus
 
         self.occupy_request: Optional[OccupyRequest] = None
         self.state = STAState.PRIMARY_BACKOFF
@@ -384,20 +390,25 @@ class STA:
         self._opt_tau = 0
         self._initial_occupancy_time = self.channel_occupancy_time
 
+    def update_reward_params(self, throughput_weight: float, latency_penalty: float,
+                             npca_switch_bonus: float = 0.0):
+        """Update reward function parameters (called by AP-side LLM policy manager)."""
+        self.throughput_weight = throughput_weight
+        self.latency_penalty = latency_penalty
+        self.npca_switch_bonus = npca_switch_bonus
+
     def _end_option(self):
         if self._opt_active:
-            throughput_weight = 1.0
-            latency_penalty_weight = 0.05
-            
             # Reward based on actual successful transmission, regardless of action
             if hasattr(self, 'tx_success') and self.tx_success:
                 attempted_transmission_slots = self.current_tx_duration
             else:
                 attempted_transmission_slots = 0
-                
-            throughput_reward = throughput_weight * attempted_transmission_slots
-            latency_penalty = latency_penalty_weight * self._opt_tau
-            cumulative_reward = throughput_reward - latency_penalty
+
+            throughput_reward = self.throughput_weight * attempted_transmission_slots
+            latency_penalty = self.latency_penalty * self._opt_tau
+            switch_bonus = self.npca_switch_bonus if self._opt_a == 1 else 0.0
+            cumulative_reward = throughput_reward - latency_penalty + switch_bonus
             self.new_episode_reward += cumulative_reward
 
             if hasattr(self, 'decision_log') and self.decision_log:
