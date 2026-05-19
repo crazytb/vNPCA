@@ -8,7 +8,6 @@ sim_results/
 *.fdb_latexmk
 *.fls
 *.synctex.gz
-*.pdf
 *.out
 *.toc
 *.lot
