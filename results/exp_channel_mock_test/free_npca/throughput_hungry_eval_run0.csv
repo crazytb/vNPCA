@@ -1,0 +1,6 @@
+episode,throughput,avg_option_duration,total_energy_uJ,npca_switch_ratio,scenario,method,run,intent
+0,3563,116.72222222222223,14844.105000004138,1.0,free_npca,throughput_hungry,0,"파일 다운로드, 속도 최대화"
+1,3922,122.0,15237.330000004098,1.0,free_npca,throughput_hungry,0,"파일 다운로드, 속도 최대화"
+2,3960,105.2625,15608.346000003949,1.0,free_npca,throughput_hungry,0,"파일 다운로드, 속도 최대화"
+3,3489,119.0,14952.651000003874,1.0,free_npca,throughput_hungry,0,"파일 다운로드, 속도 최대화"
+4,3707,123.7936507936508,15281.370000003388,1.0,free_npca,throughput_hungry,0,"파일 다운로드, 속도 최대화"

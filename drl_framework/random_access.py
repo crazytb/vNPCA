@@ -9,6 +9,7 @@ from enum import Enum, auto
 from dataclasses import dataclass
 from typing import Optional, Tuple
 from drl_framework.params import EPS_START, EPS_END, EPS_DECAY
+from drl_framework.configs import ENERGY_TX_PER_SLOT_UJ, ENERGY_LISTEN_PER_SLOT_UJ, ENERGY_NPCA_TRANSITION_UJ
 from collections import defaultdict
 
 # Fix random seed for reproducibility
@@ -26,6 +27,11 @@ class STAState(Enum):
     NPCA_FROZEN = auto()
     NPCA_TX = auto()
 
+# Pre-computed state sets for energy model (avoid set construction per slot)
+_LISTEN_STATES = frozenset({STAState.PRIMARY_BACKOFF, STAState.PRIMARY_FROZEN,
+                             STAState.NPCA_BACKOFF, STAState.NPCA_FROZEN})
+_TX_STATES = frozenset({STAState.PRIMARY_TX, STAState.NPCA_TX})
+
 @dataclass
 class OccupyRequest:
     channel_id: int
@@ -33,10 +39,12 @@ class OccupyRequest:
     is_obss: bool = False
 
 class Channel:
-    def __init__(self, channel_id: int, obss_generation_rate: float = 0.0, obss_duration_range: Tuple[int, int] = (20, 40)):
+    def __init__(self, channel_id: int, obss_generation_rate: float = 0.0, obss_duration_range: Tuple[int, int] = (20, 40),
+                 obss_duration_sampler=None):
         self.channel_id = channel_id
         self.obss_generation_rate = obss_generation_rate
         self.obss_duration_range = obss_duration_range
+        self.obss_duration_sampler = obss_duration_sampler  # callable() -> int; overrides uniform randint if set
 
         self.intra_occupied = False
         self.intra_end_slot = 0
@@ -86,7 +94,9 @@ class Channel:
 
         if not self.is_busy(slot):
             if random.random() < self.obss_generation_rate:
-                duration = random.randint(*self.obss_duration_range)
+                duration = (self.obss_duration_sampler()
+                            if self.obss_duration_sampler is not None
+                            else random.randint(*self.obss_duration_range))
                 obss_tuple = (
                     f"obss_gen_{self.channel_id}_slot{slot}",
                     slot,
@@ -118,7 +128,8 @@ class STA:
                  num_slots_per_episode: int = 1000,
                  throughput_weight: float = 1.0,
                  latency_penalty: float = 0.05,
-                 npca_switch_bonus: float = 0.0):
+                 npca_switch_bonus: float = 0.0,
+                 npca_switch_cost: float = 0.0):
         self.sta_id = sta_id
         self.channel_id = channel_id
         self.primary_channel = primary_channel
@@ -131,6 +142,11 @@ class STA:
         self.throughput_weight = throughput_weight
         self.latency_penalty = latency_penalty
         self.npca_switch_bonus = npca_switch_bonus
+        self.npca_switch_cost = npca_switch_cost
+        # Normalized reward params as context vector [tw, lp, sb, sc] ∈ [0,1]⁴
+        # Inserted into DQN state so the agent conditions on current reward structure.
+        # Default = fixed_drl baseline: tw=1.0→0.2, lp=0.05→0.21, sb=0.0, sc=0.0
+        self.context_vec: list[float] = [0.2, 0.21, 0.0, 0.0]
 
         self.occupy_request: Optional[OccupyRequest] = None
         self.state = STAState.PRIMARY_BACKOFF
@@ -155,6 +171,7 @@ class STA:
 
         self.channel_occupancy_time = 0
         self.total_episode_slots = 0
+        self.episode_energy_uJ: float = 0.0  # cumulative energy this episode (μJ)
 
     def generate_backoff(self) -> int:
         cw = CONTENTION_WINDOW[self.cw_index]
@@ -190,14 +207,20 @@ class STA:
             "radio_transition_time": self.radio_transition_time,
             "tx_duration": self.get_tx_duration(),
             "cw_index": self.cw_index,
+            # context: normalized reward params — agent conditions on current reward structure
+            "ctx_tw": self.context_vec[0],
+            "ctx_lp": self.context_vec[1],
+            "ctx_sb": self.context_vec[2],
+            "ctx_sc": self.context_vec[3],
         }
-    
+
     def obs_to_vec(self, obs: dict, normalize: bool = False, caps=None):
         FEATURE_ORDER = (
             "primary_channel_obss_occupied_remained",
             "radio_transition_time",
             "tx_duration",
             "cw_index",
+            "ctx_tw", "ctx_lp", "ctx_sb", "ctx_sc",
         )
         x = [float(obs[k]) for k in FEATURE_ORDER]
         if not normalize:
@@ -207,12 +230,18 @@ class STA:
         x[1] = min(x[1], caps["slots"]) / caps["slots"]
         x[2] = min(x[2], caps["slots"]) / caps["slots"]
         x[3] = min(x[3], caps["cw_stage_max"]) / caps["cw_stage_max"]
+        # x[4..7]: context_vec already normalized to [0,1]
         return x
 
     def step(self, slot: int):
         if self._opt_active:
             self._opt_tau += 1
-            
+
+        if self.state in _LISTEN_STATES:
+            self.episode_energy_uJ += ENERGY_LISTEN_PER_SLOT_UJ
+        elif self.state in _TX_STATES:
+            self.episode_energy_uJ += ENERGY_TX_PER_SLOT_UJ
+
         if self.state == STAState.PRIMARY_BACKOFF:
             self._handle_primary_backoff(slot)
         elif self.state == STAState.PRIMARY_FROZEN:
@@ -389,13 +418,19 @@ class STA:
         self._opt_R = 0.0
         self._opt_tau = 0
         self._initial_occupancy_time = self.channel_occupancy_time
+        if int(a_int) == 1:
+            self.episode_energy_uJ += ENERGY_NPCA_TRANSITION_UJ
 
     def update_reward_params(self, throughput_weight: float, latency_penalty: float,
-                             npca_switch_bonus: float = 0.0):
-        """Update reward function parameters (called by AP-side LLM policy manager)."""
+                             npca_switch_bonus: float = 0.0, npca_switch_cost: float = 0.0,
+                             context_vec: list[float] | None = None):
+        """Update reward params and context vector (called by AP-side LLM policy manager)."""
         self.throughput_weight = throughput_weight
         self.latency_penalty = latency_penalty
         self.npca_switch_bonus = npca_switch_bonus
+        self.npca_switch_cost = npca_switch_cost
+        if context_vec is not None:
+            self.context_vec = context_vec
 
     def _end_option(self):
         if self._opt_active:
@@ -408,7 +443,8 @@ class STA:
             throughput_reward = self.throughput_weight * attempted_transmission_slots
             latency_penalty = self.latency_penalty * self._opt_tau
             switch_bonus = self.npca_switch_bonus if self._opt_a == 1 else 0.0
-            cumulative_reward = throughput_reward - latency_penalty + switch_bonus
+            switch_cost = self.npca_switch_cost if self._opt_a == 1 else 0.0
+            cumulative_reward = throughput_reward - latency_penalty + switch_bonus - switch_cost
             self.new_episode_reward += cumulative_reward
 
             if hasattr(self, 'decision_log') and self.decision_log:

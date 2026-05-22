@@ -1,0 +1,382 @@
+[
+  {
+    "call_count": 1,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.035640356403564034,
+      "avg_episode_reward": 1053.881,
+      "npca_switch_ratio": 0.4854368932038835,
+      "avg_throughput_slots": 759097.0475728168,
+      "avg_option_duration": 589.5376213592233,
+      "current_epsilon": 0.43422808571990246,
+      "episode_progress": 0.051
+    },
+    "throughput_weight": 1.0,
+    "latency_penalty": 0.05,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.0,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 2,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.04455044550445504,
+      "avg_episode_reward": 1088.649,
+      "npca_switch_ratio": 0.4965437788018433,
+      "avg_throughput_slots": 747530.9270737324,
+      "avg_option_duration": 599.7695852534562,
+      "current_epsilon": 0.2163736811121843,
+      "episode_progress": 0.101
+    },
+    "throughput_weight": 1.0,
+    "latency_penalty": 0.05,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.0,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 3,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.035640356403564034,
+      "avg_episode_reward": 757.8129999999999,
+      "npca_switch_ratio": 0.5265700483091788,
+      "avg_throughput_slots": 737053.8210144944,
+      "avg_option_duration": 582.7246376811594,
+      "current_epsilon": 0.14204120428843348,
+      "episode_progress": 0.151
+    },
+    "throughput_weight": 1.0,
+    "latency_penalty": 0.05,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.0,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 4,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 964.9939999999999,
+      "npca_switch_ratio": 0.5279672578444747,
+      "avg_throughput_slots": 776345.1241473402,
+      "avg_option_duration": 608.9167803547067,
+      "current_epsilon": 0.09471175084383276,
+      "episode_progress": 0.201
+    },
+    "throughput_weight": 1.15,
+    "latency_penalty": 0.065,
+    "npca_switch_bonus": 0.08,
+    "npca_switch_cost": 0.06,
+    "qos_priority": "balanced",
+    "reasoning": "Low OBSS occupancy (0.0178) with moderate NPCA adoption (0.528) suggests balanced switching; small increases to throughput_weight and latency_penalty with modest switch incentive prevent over-switching while maintaining exploration during early training (20.1% progress)."
+  },
+  {
+    "call_count": 5,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1092.958,
+      "npca_switch_ratio": 0.5087514585764294,
+      "avg_throughput_slots": 742216.0964994169,
+      "avg_option_duration": 594.8961493582264,
+      "current_epsilon": 0.06918706491181068,
+      "episode_progress": 0.251
+    },
+    "throughput_weight": 1.05,
+    "latency_penalty": 0.075,
+    "npca_switch_bonus": 0.065,
+    "npca_switch_cost": 0.095,
+    "qos_priority": "balanced",
+    "reasoning": "Low OBSS occupancy (0.0178) with moderate switch ratio (0.509) indicates balanced switching behavior; slight reduction in throughput_weight and npca_switch_bonus, with increased npca_switch_cost, discourages over-switching in low-interference conditions while maintaining stability during early training (25% progress)."
+  },
+  {
+    "call_count": 6,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1002.4150000000002,
+      "npca_switch_ratio": 0.48188405797101447,
+      "avg_throughput_slots": 705885.9899154598,
+      "avg_option_duration": 593.9130434782609,
+      "current_epsilon": 0.058518466611642006,
+      "episode_progress": 0.301
+    },
+    "throughput_weight": 1.2,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.095,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "OBSS occupancy (0.0267) is moderate with balanced switch ratio (0.482); increase throughput_weight to exploit available NPCA capacity, raise npca_switch_bonus to encourage opportunistic switching, slightly reduce npca_switch_cost to lower transition penalty, and marginally increase latency_penalty to account for moderate option duration (593.9 slots)."
+  },
+  {
+    "call_count": 7,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1175.2959999999998,
+      "npca_switch_ratio": 0.47986942328618065,
+      "avg_throughput_slots": 754150.9640369975,
+      "avg_option_duration": 612.7834602829162,
+      "current_epsilon": 0.05347028370327081,
+      "episode_progress": 0.351
+    },
+    "throughput_weight": 1.2,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.095,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 8,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 881.1320000000001,
+      "npca_switch_ratio": 0.5021037868162693,
+      "avg_throughput_slots": 735669.7509116407,
+      "avg_option_duration": 552.2244039270687,
+      "current_epsilon": 0.05170785184445956,
+      "episode_progress": 0.401
+    },
+    "throughput_weight": 1.2,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.095,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 9,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 923.1120000000001,
+      "npca_switch_ratio": 0.44113667117726657,
+      "avg_throughput_slots": 725840.734303112,
+      "avg_option_duration": 586.7320703653586,
+      "current_epsilon": 0.05081647119116796,
+      "episode_progress": 0.451
+    },
+    "throughput_weight": 1.2,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.095,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 10,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.04455044550445504,
+      "avg_episode_reward": 1037.282,
+      "npca_switch_ratio": 0.4911392405063291,
+      "avg_throughput_slots": 756076.8273417727,
+      "avg_option_duration": 570.6822784810126,
+      "current_epsilon": 0.05038183616473004,
+      "episode_progress": 0.501
+    },
+    "throughput_weight": 1.2,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.095,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 11,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 950.8509999999999,
+      "npca_switch_ratio": 0.46776232616940583,
+      "avg_throughput_slots": 717376.5879266753,
+      "avg_option_duration": 572.0505689001264,
+      "current_epsilon": 0.05017486104474157,
+      "episode_progress": 0.551
+    },
+    "throughput_weight": 1.2,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.095,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 12,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1100.8020000000001,
+      "npca_switch_ratio": 0.47762863534675615,
+      "avg_throughput_slots": 716199.0273489937,
+      "avg_option_duration": 573.3154362416108,
+      "current_epsilon": 0.05007296585766096,
+      "episode_progress": 0.601
+    },
+    "throughput_weight": 1.0,
+    "latency_penalty": 0.1,
+    "npca_switch_bonus": 0.06,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "LOW OBSS occupancy (0.0178) and moderate NPCA switch ratio (0.478) indicate balanced switching; reduce throughput_weight and npca_switch_bonus to discourage unnecessary switches, increase npca_switch_cost to penalize overhead, and slightly raise latency_penalty to account for switching delays during stable low-interference periods."
+  },
+  {
+    "call_count": 13,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1056.834,
+      "npca_switch_ratio": 0.4875444839857651,
+      "avg_throughput_slots": 746684.9016014239,
+      "avg_option_duration": 616.0427046263345,
+      "current_epsilon": 0.05003172140306055,
+      "episode_progress": 0.651
+    },
+    "throughput_weight": 1.0,
+    "latency_penalty": 0.1,
+    "npca_switch_bonus": 0.06,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 14,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0,
+      "avg_episode_reward": 729.7069999999999,
+      "npca_switch_ratio": 0.4809437386569873,
+      "avg_throughput_slots": 765144.5969147006,
+      "avg_option_duration": 594.0127041742287,
+      "current_epsilon": 0.050018283364971085,
+      "episode_progress": 0.701
+    },
+    "throughput_weight": 0.8,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.03,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "balanced",
+    "reasoning": "OBSS occupancy is zero with moderate switch ratio (0.481); reduce throughput_weight and NPCA incentives to avoid unnecessary switching overhead, increase latency_penalty slightly to favor primary channel stability in interference-free conditions."
+  },
+  {
+    "call_count": 15,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 986.939,
+      "npca_switch_ratio": 0.46886912325285895,
+      "avg_throughput_slots": 728493.3503176617,
+      "avg_option_duration": 614.0038119440915,
+      "current_epsilon": 0.05000840638577603,
+      "episode_progress": 0.751
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.108,
+    "npca_switch_bonus": 0.045,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "Low OBSS occupancy (0.0089) and moderate NPCA switch ratio (0.469) indicate balanced utilization; slight increases to throughput_weight and npca_switch_bonus encourage modest NPCA exploitation without over-switching, while reducing npca_switch_cost and latency_penalty reflects stable late-stage training (75% progress) with high episode rewards."
+  },
+  {
+    "call_count": 16,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 714.7669999999997,
+      "npca_switch_ratio": 0.5033898305084745,
+      "avg_throughput_slots": 708609.6746610161,
+      "avg_option_duration": 598.0338983050848,
+      "current_epsilon": 0.05000467856588653,
+      "episode_progress": 0.801
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.108,
+    "npca_switch_bonus": 0.045,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 17,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1034.2079999999999,
+      "npca_switch_ratio": 0.4401008827238335,
+      "avg_throughput_slots": 755225.0383984862,
+      "avg_option_duration": 580.2307692307693,
+      "current_epsilon": 0.05000214039764773,
+      "episode_progress": 0.851
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.108,
+    "npca_switch_bonus": 0.045,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "Error (OverloadedError), kept previous params."
+  },
+  {
+    "call_count": 18,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.07128071280712807,
+      "avg_episode_reward": 988.7170000000001,
+      "npca_switch_ratio": 0.4050131926121372,
+      "avg_throughput_slots": 755098.7227572561,
+      "avg_option_duration": 600.2321899736148,
+      "current_epsilon": 0.05000104392915553,
+      "episode_progress": 0.901
+    },
+    "throughput_weight": 1.15,
+    "latency_penalty": 0.095,
+    "npca_switch_bonus": 0.08,
+    "npca_switch_cost": 0.09,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH obss_occupancy_rate (0.0713) with moderate npca_switch_ratio (0.405) indicates NPCA is underutilized; increased throughput_weight and npca_switch_bonus to encourage switching, reduced latency_penalty and net switching cost to favor NPCA exploitation at high interference levels near convergence (90.1% progress)."
+  },
+  {
+    "call_count": 19,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1076.606,
+      "npca_switch_ratio": 0.46436781609195404,
+      "avg_throughput_slots": 752530.7887931033,
+      "avg_option_duration": 606.4770114942529,
+      "current_epsilon": 0.05000044619090897,
+      "episode_progress": 0.951
+    },
+    "throughput_weight": 1.25,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.1,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "balanced",
+    "reasoning": "Moderate OBSS occupancy (0.0267) with balanced switch ratio (0.464) suggests modest NPCA underutilization; incrementally increase throughput_weight and npca_switch_bonus to encourage slightly more switching while reducing latency penalty as training matures (95.1% progress, low epsilon)."
+  }
+]

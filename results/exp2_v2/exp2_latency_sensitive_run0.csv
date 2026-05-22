@@ -1,0 +1,11 @@
+episode,group,run,obss_duration,throughput,avg_option_duration,reward,avg_loss,epsilon,npca_ratio,throughput_weight,latency_penalty,npca_switch_bonus,npca_switch_cost,qos_priority
+0,latency_sensitive,0,20-200,296,183.83333333333334,240.85,0.0,0.9,0.5,,,,,
+1,latency_sensitive,0,20-200,250,242.0,297.6,0.0,0.894915269445845,0.0,,,,,
+2,latency_sensitive,0,20-200,358,360.25,281.95,0.0,0.8915423586867929,0.0,,,,,
+3,latency_sensitive,0,20-200,592,0.0,0.0,0.0,0.8881829126234326,0.0,,,,,
+4,latency_sensitive,0,20-200,315,160.375,318.85,0.0,0.8881829126234326,0.625,,,,,
+5,latency_sensitive,0,20-200,142,311.75,119.64999999999999,0.0,0.8815041997935286,0.5,,,,,
+6,latency_sensitive,0,20-200,474,0.0,0.0,0.0,0.878184826167437,0.0,,,,,
+7,latency_sensitive,0,20-200,678,112.33333333333333,146.15,0.0,0.878184826167437,0.0,,,,,
+8,latency_sensitive,0,20-200,473,248.25,271.34999999999997,0.0,0.8757039947966141,0.25,,,,,
+9,latency_sensitive,0,20-200,359,208.0,22.6,0.0,0.8724077756506773,1.0,,,,,

@@ -1,0 +1,382 @@
+[
+  {
+    "call_count": 1,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.035640356403564034,
+      "avg_episode_reward": 987.3869999999997,
+      "npca_switch_ratio": 0.44129032258064516,
+      "avg_throughput_slots": 766821.0055483868,
+      "avg_option_duration": 630.5935483870968,
+      "current_epsilon": 0.44632570060614757,
+      "episode_progress": 0.051
+    },
+    "throughput_weight": 2.2,
+    "latency_penalty": 0.02,
+    "npca_switch_bonus": 0.2,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization for file download; increased throughput_weight to 2.2 and npca_switch_bonus to 0.2 to aggressively exploit NPCA for higher successful TX slots, while reducing latency_penalty since delay is not critical for bulk transfers and keeping switch_cost minimal to reduce friction."
+  },
+  {
+    "call_count": 2,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1061.505,
+      "npca_switch_ratio": 0.4233490566037736,
+      "avg_throughput_slots": 738489.7324292457,
+      "avg_option_duration": 616.686320754717,
+      "current_epsilon": 0.22126915921024504,
+      "episode_progress": 0.101
+    },
+    "throughput_weight": 2.6,
+    "latency_penalty": 0.015,
+    "npca_switch_bonus": 0.28,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "File download intent demands aggressive throughput maximization; increased throughput_weight by 18% and npca_switch_bonus by 40% to exploit NPCA more readily, while low OBSS occupancy (0.0178) and moderate switch ratio (0.423) indicate room for increased NPCA utilization without over-switching risk."
+  },
+  {
+    "call_count": 3,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 824.832,
+      "npca_switch_ratio": 0.42,
+      "avg_throughput_slots": 745176.3088461543,
+      "avg_option_duration": 564.983076923077,
+      "current_epsilon": 0.14112537900383673,
+      "episode_progress": 0.151
+    },
+    "throughput_weight": 2.9,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.32,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; low OBSS occupancy (0.0178) and moderate NPCA switch ratio (0.42) indicate room to increase switching incentive\u2014boost npca_switch_bonus to 0.32 and throughput_weight to 2.9 to maximize successful TX slots via NPCA exploitation while maintaining minimal latency penalty."
+  },
+  {
+    "call_count": 4,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 1014.1099999999997,
+      "npca_switch_ratio": 0.4583850931677019,
+      "avg_throughput_slots": 742187.8851552802,
+      "avg_option_duration": 576.104347826087,
+      "current_epsilon": 0.09074105675576088,
+      "episode_progress": 0.201
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.35,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization for file download; current parameters already strongly favor this with high throughput_weight (2.9) and moderate NPCA switching (45.8%). Minor adjustments: maximize throughput_weight to ceiling (3.0) and increase npca_switch_bonus slightly (0.32\u21920.35) to encourage more aggressive NPCA exploitation for marginal TX slot gains, while maintaining low latency_penalty and switching cost to stay focused on speed."
+  },
+  {
+    "call_count": 5,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0,
+      "avg_episode_reward": 772.998,
+      "npca_switch_ratio": 0.42701863354037267,
+      "avg_throughput_slots": 699183.8293478265,
+      "avg_option_duration": 602.8913043478261,
+      "current_epsilon": 0.07139669240320871,
+      "episode_progress": 0.251
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.35,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly aligned (weight=3.0, high bonus, minimal cost). Network shows zero OBSS occupancy, so no interference pressure\u2014maintain aggressive NPCA switching incentive (net=0.33) to exploit available secondary channel capacity when OBSS eventually appears."
+  },
+  {
+    "call_count": 6,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.035640356403564034,
+      "avg_episode_reward": 942.3050000000002,
+      "npca_switch_ratio": 0.5027027027027027,
+      "avg_throughput_slots": 737688.5689864871,
+      "avg_option_duration": 618.4527027027027,
+      "current_epsilon": 0.06041488829734343,
+      "episode_progress": 0.301
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.4,
+    "npca_switch_cost": 0.01,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly favor this. OBSS occupancy (3.56%) justifies aggressive NPCA switching; increase switch_bonus to 0.40 and reduce switch_cost to 0.01 to boost exploitation of secondary channels and maximize successful TX slots."
+  },
+  {
+    "call_count": 7,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 908.3939999999998,
+      "npca_switch_ratio": 0.4413793103448276,
+      "avg_throughput_slots": 746180.2775862074,
+      "avg_option_duration": 606.5075862068966,
+      "current_epsilon": 0.05504418628532911,
+      "episode_progress": 0.351
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.35,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly favor this. Network stats show low OBSS occupancy (0.0089) and moderate NPCA switch ratio (0.441), indicating balanced switching behavior\u2014slight reduction in switching bonus and modest increase in switch cost prevent over-switching while maintaining aggressive throughput focus."
+  },
+  {
+    "call_count": 8,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.053460534605346055,
+      "avg_episode_reward": 890.0729999999998,
+      "npca_switch_ratio": 0.43131462333825704,
+      "avg_throughput_slots": 753611.370753324,
+      "avg_option_duration": 594.2200886262925,
+      "current_epsilon": 0.05260448862169688,
+      "episode_progress": 0.401
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.4,
+    "npca_switch_cost": 0.01,
+    "qos_priority": "throughput",
+    "reasoning": "File download intent prioritizes throughput; current params already maximize this, but NPCA switch ratio (0.431) indicates room to exploit secondary channel more\u2014increased npca_switch_bonus by 14% and reduced npca_switch_cost by 50% to encourage NPCA usage when OBSS occupancy (5.35%) justifies it, while maintaining aggressive throughput optimization."
+  },
+  {
+    "call_count": 9,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 947.9760000000001,
+      "npca_switch_ratio": 0.4368932038834951,
+      "avg_throughput_slots": 775398.3177531201,
+      "avg_option_duration": 638.7683772538142,
+      "current_epsilon": 0.051280481718210376,
+      "episode_progress": 0.451
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.45,
+    "npca_switch_cost": 0.01,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly prioritize this. OBSS occupancy (0.0267) is moderate and switch ratio (0.437) indicates balanced NPCA adoption\u2014slight increase in npca_switch_bonus (0.40\u21920.45) encourages more aggressive NPCA exploitation to further boost successful TX slots while maintaining low latency penalty and minimal switching cost."
+  },
+  {
+    "call_count": 10,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1154.2900000000004,
+      "npca_switch_ratio": 0.47835738068812433,
+      "avg_throughput_slots": 748084.1456714758,
+      "avg_option_duration": 602.1309655937847,
+      "current_epsilon": 0.0505253116095244,
+      "episode_progress": 0.501
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.35,
+    "npca_switch_cost": 0.05,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly favor this. Network shows low OBSS (0.0178) and moderate NPCA adoption (0.478), indicating balanced switching\u2014slightly reduce npca_switch_bonus and increase npca_switch_cost to avoid over-switching on low interference, preserving primary channel stability while maintaining aggressive throughput optimization."
+  },
+  {
+    "call_count": 11,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 1078.7769999999996,
+      "npca_switch_ratio": 0.44976076555023925,
+      "avg_throughput_slots": 757427.3007177039,
+      "avg_option_duration": 613.244019138756,
+      "current_epsilon": 0.05022814733547295,
+      "episode_progress": 0.551
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.35,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "Intent is throughput maximization; current parameters already aggressively favor NPCA switching with high bonus and low cost. Low OBSS occupancy (0.0089) and balanced switch ratio (0.45) indicate the agent is well-tuned; reduce npca_switch_cost slightly to encourage marginal NPCA usage in brief interference windows without destabilizing the learned policy at 55% training progress."
+  },
+  {
+    "call_count": 12,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.035640356403564034,
+      "avg_episode_reward": 872.4900000000001,
+      "npca_switch_ratio": 0.4497751124437781,
+      "avg_throughput_slots": 759084.5296851576,
+      "avg_option_duration": 608.6731634182909,
+      "current_epsilon": 0.05012078252669412,
+      "episode_progress": 0.601
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.4,
+    "npca_switch_cost": 0.01,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly favor NPCA switching. With moderate OBSS occupancy (3.56%), switch ratio of 45%, and high training progress (60%), increase npca_switch_bonus by 12.8% to 0.40 and lower npca_switch_cost by 50% to 0.01 to further incentivize NPCA exploitation while maintaining aggressive throughput orientation."
+  },
+  {
+    "call_count": 13,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1128.9519999999998,
+      "npca_switch_ratio": 0.42214532871972316,
+      "avg_throughput_slots": 778285.1813148791,
+      "avg_option_duration": 591.5755478662053,
+      "current_epsilon": 0.050050855670394814,
+      "episode_progress": 0.651
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.35,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "throughput",
+    "reasoning": "User intent (maximize throughput) is already well-honored; current params are optimal. Network shows low OBSS occupancy (0.0178) with moderate NPCA switching (0.422), indicating conservative switching is appropriate\u2014reduce switching incentive slightly (bonus 0.35, cost 0.02) to avoid unnecessary overhead and preserve primary channel stability while maintaining aggressive throughput focus."
+  },
+  {
+    "call_count": 14,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1082.138,
+      "npca_switch_ratio": 0.43444730077120824,
+      "avg_throughput_slots": 803598.7905526982,
+      "avg_option_duration": 602.5822622107969,
+      "current_epsilon": 0.05002340598194729,
+      "episode_progress": 0.701
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.3,
+    "npca_switch_cost": 0.05,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly favor this. With low OBSS occupancy (0.0178) and moderate NPCA adoption (0.434), reduce npca_switch_bonus slightly (0.35\u21920.30) to avoid over-switching on rare interference, and increase npca_switch_cost (0.02\u21920.05) to discourage unnecessary transitions. Maintain aggressive throughput_weight and minimal latency penalty to keep download speed prioritized."
+  },
+  {
+    "call_count": 15,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 1022.4429999999999,
+      "npca_switch_ratio": 0.4489528795811518,
+      "avg_throughput_slots": 765355.202683247,
+      "avg_option_duration": 572.4751308900524,
+      "current_epsilon": 0.050011012066525744,
+      "episode_progress": 0.751
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.25,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "throughput",
+    "reasoning": "Intent (maximize throughput) fully honored; current parameters are well-tuned; minor adjustment: reduce npca_switch_bonus and increase npca_switch_cost slightly to moderate over-switching (ratio 0.449 with low OBSS 0.0089) and preserve energy without compromising throughput gains."
+  },
+  {
+    "call_count": 16,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 1062.934,
+      "npca_switch_ratio": 0.46274038461538464,
+      "avg_throughput_slots": 743183.6738581724,
+      "avg_option_duration": 567.5853365384615,
+      "current_epsilon": 0.05000484037224777,
+      "episode_progress": 0.801
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.3,
+    "npca_switch_cost": 0.05,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current params already prioritize this well. Network stats show low OBSS (0.0089) and moderate switching (0.463), indicating balanced NPCA usage\u2014increase bonus slightly to encourage more opportunistic switching and reduce cost to lower transition friction while maintaining stability in late training (\u03b5=0.05, 80% progress)."
+  },
+  {
+    "call_count": 17,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 922.4140000000002,
+      "npca_switch_ratio": 0.42857142857142855,
+      "avg_throughput_slots": 749732.6208683474,
+      "avg_option_duration": 589.7591036414566,
+      "current_epsilon": 0.05000237024097802,
+      "episode_progress": 0.851
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.25,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "throughput",
+    "reasoning": "User intent (maximize throughput) is already well-honored by current high throughput_weight and low latency_penalty; low OBSS occupancy (0.0089) with moderate NPCA switch ratio (0.429) suggests slight over-switching\u2014reduce npca_switch_bonus and increase npca_switch_cost to discourage unnecessary transitions, preserving high successful TX slots while avoiding idle-state switching overhead."
+  },
+  {
+    "call_count": 18,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 866.3589999999998,
+      "npca_switch_ratio": 0.3985714285714286,
+      "avg_throughput_slots": 713263.5022142857,
+      "avg_option_duration": 573.5442857142857,
+      "current_epsilon": 0.0500011888561525,
+      "episode_progress": 0.901
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.2,
+    "npca_switch_cost": 0.05,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current params already aggressive. Low OBSS occupancy (0.0089) means NPCA switching is infrequent\u2014reduce npca_switch_bonus and npca_switch_cost slightly to avoid wasteful switching overhead while preserving throughput focus. Late training (90% progress, low epsilon) warrants conservative tuning."
+  },
+  {
+    "call_count": 19,
+    "user_intent": "\ud30c\uc77c \ub2e4\uc6b4\ub85c\ub4dc, \uc18d\ub3c4 \ucd5c\ub300\ud654 (file download, maximize throughput)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1081.9319999999998,
+      "npca_switch_ratio": 0.4539800995024876,
+      "avg_throughput_slots": 783534.1767412946,
+      "avg_option_duration": 579.342039800995,
+      "current_epsilon": 0.05000054280324568,
+      "episode_progress": 0.951
+    },
+    "throughput_weight": 3.0,
+    "latency_penalty": 0.01,
+    "npca_switch_bonus": 0.25,
+    "npca_switch_cost": 0.03,
+    "qos_priority": "throughput",
+    "reasoning": "User intent is throughput maximization; current parameters already strongly favor this (weight=3.0, bonus=0.2). Network stats show balanced switching (45.4%) with moderate OBSS (2.67%), so increase npca_switch_bonus by 25% to 0.25 and reduce switching cost by 40% to 0.03 to encourage more aggressive NPCA exploitation while maintaining training stability at 95% progress."
+  }
+]

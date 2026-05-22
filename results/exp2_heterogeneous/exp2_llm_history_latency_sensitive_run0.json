@@ -1,0 +1,382 @@
+[
+  {
+    "call_count": 1,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.031320313203132034,
+      "avg_episode_reward": 1020.952,
+      "npca_switch_ratio": 0.503015681544029,
+      "avg_throughput_slots": 735797.4938480101,
+      "avg_option_duration": 593.3051869722557,
+      "current_epsilon": 0.4326942431073708,
+      "episode_progress": 0.051
+    },
+    "throughput_weight": 0.8,
+    "latency_penalty": 0.15,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.04,
+    "qos_priority": "latency",
+    "reasoning": "Video call demands latency minimization; tripled latency_penalty to strongly penalize long option durations, reduced throughput_weight to deprioritize TX slots, and set minimal net switching incentive (0.02-0.04) to avoid NPCA overhead unless OBSS duration is substantial."
+  },
+  {
+    "call_count": 2,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 838.8140000000001,
+      "npca_switch_ratio": 0.4444444444444444,
+      "avg_throughput_slots": 743286.914035088,
+      "avg_option_duration": 566.5482456140351,
+      "current_epsilon": 0.2452413234320731,
+      "episode_progress": 0.101
+    },
+    "throughput_weight": 0.75,
+    "latency_penalty": 0.18,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.05,
+    "qos_priority": "latency",
+    "reasoning": "Video call latency-minimization intent requires aggressive penalty for option duration (increased to 0.18) to discourage OBSS-triggered switching; low OBSS occupancy (0.0178) and moderate switch ratio justify minimal NPCA incentive (0.01) and slightly higher switching cost (0.05) to keep agent on stable primary channel during real-time communication."
+  },
+  {
+    "call_count": 3,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 843.192,
+      "npca_switch_ratio": 0.5140324963072378,
+      "avg_throughput_slots": 728707.6316100445,
+      "avg_option_duration": 587.8286558345643,
+      "current_epsilon": 0.14930901470758462,
+      "episode_progress": 0.151
+    },
+    "throughput_weight": 0.65,
+    "latency_penalty": 0.19,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.06,
+    "qos_priority": "latency",
+    "reasoning": "Video call prioritizes latency minimization; increased latency_penalty and slight reduction in throughput_weight enforce strict delay control, while modest npca_switch_bonus/cost adjustment discourages unnecessary channel switches that add overhead despite low OBSS occupancy (0.0089)."
+  },
+  {
+    "call_count": 4,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1236.3200000000002,
+      "npca_switch_ratio": 0.5575888051668461,
+      "avg_throughput_slots": 770764.3291173307,
+      "avg_option_duration": 627.6899892357374,
+      "current_epsilon": 0.08997428408471543,
+      "episode_progress": 0.201
+    },
+    "throughput_weight": 0.58,
+    "latency_penalty": 0.195,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-critical (video call); maintain HIGH latency_penalty and LOW NPCA switching incentive; network shows LOW OBSS (0.0178) with moderate switching (0.558), so slightly reduce switch_bonus and increase switch_cost to discourage unnecessary overhead during this clean channel period."
+  },
+  {
+    "call_count": 5,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 946.0320000000002,
+      "npca_switch_ratio": 0.4914134742404227,
+      "avg_throughput_slots": 737606.7439233811,
+      "avg_option_duration": 613.1268163804491,
+      "current_epsilon": 0.0687695588892725,
+      "episode_progress": 0.251
+    },
+    "throughput_weight": 0.62,
+    "latency_penalty": 0.195,
+    "npca_switch_bonus": 0.005,
+    "npca_switch_cost": 0.09,
+    "qos_priority": "latency",
+    "reasoning": "Video call demands minimize latency; maintain high latency_penalty and low NPCA incentive since moderate OBSS (2.67%) and balanced switch ratio (49%) suggest current parameters are well-tuned; make small conservative adjustments to slightly reduce switching temptation and increase throughput stability during early training."
+  },
+  {
+    "call_count": 6,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0,
+      "avg_episode_reward": 1158.112,
+      "npca_switch_ratio": 0.545664739884393,
+      "avg_throughput_slots": 771069.3605202322,
+      "avg_option_duration": 598.5699421965318,
+      "current_epsilon": 0.057902951912458124,
+      "episode_progress": 0.301
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.08,
+    "qos_priority": "latency",
+    "reasoning": "Video call requires minimal delay; increased latency_penalty to 0.20 (upper bound for latency-sensitive), kept npca_switch_bonus minimal (0.02) since zero OBSS occupancy makes switching unnecessary, and slightly reduced throughput_weight to avoid over-optimization for throughput in favor of consistent low-latency behavior."
+  },
+  {
+    "call_count": 7,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0,
+      "avg_episode_reward": 990.1610000000001,
+      "npca_switch_ratio": 0.520253164556962,
+      "avg_throughput_slots": 730641.7793037968,
+      "avg_option_duration": 577.6189873417721,
+      "current_epsilon": 0.053586713592835865,
+      "episode_progress": 0.351
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "latency",
+    "reasoning": "Video call intent demands minimized delay; current latency_penalty is already at maximum (0.20), so maintain it; reduce npca_switch_bonus and increase npca_switch_cost to strongly discourage unnecessary NPCA transitions that add switching overhead, especially since OBSS occupancy is negligible (0.0000) making NPCA switches unjustified."
+  },
+  {
+    "call_count": 8,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1167.163,
+      "npca_switch_ratio": 0.525383707201889,
+      "avg_throughput_slots": 796408.14498229,
+      "avg_option_duration": 615.0613931523022,
+      "current_epsilon": 0.05158128269424824,
+      "episode_progress": 0.401
+    },
+    "throughput_weight": 0.52,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.005,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-critical (video call); maintained maximum latency_penalty at 0.2, reduced npca_switch_bonus to discourage unnecessary NPCA switching overhead, and increased npca_switch_cost to prioritize staying on primary channel\u2014minimizing delay accumulation even though OBSS rate is moderate (0.0267)."
+  },
+  {
+    "call_count": 9,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.04455044550445504,
+      "avg_episode_reward": 1054.179,
+      "npca_switch_ratio": 0.5213270142180095,
+      "avg_throughput_slots": 745617.2146327003,
+      "avg_option_duration": 608.1137440758293,
+      "current_epsilon": 0.05070415015971704,
+      "episode_progress": 0.451
+    },
+    "throughput_weight": 0.5,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.16,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-critical (video call); maintain maximal latency_penalty and eliminate npca_switch_bonus to strongly discourage switching; modest increase to npca_switch_cost further disincentivizes NPCA overhead, keeping the AP on primary channel for consistent low-latency delivery."
+  },
+  {
+    "call_count": 10,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.053460534605346055,
+      "avg_episode_reward": 1224.8249999999998,
+      "npca_switch_ratio": 0.5420841683366734,
+      "avg_throughput_slots": 746612.9969438881,
+      "avg_option_duration": 594.7905811623247,
+      "current_epsilon": 0.05026800124565501,
+      "episode_progress": 0.501
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.16,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-critical (video call); maintain high latency_penalty and low switching incentives; minimal throughput_weight increase (0.5\u21920.55) to preserve delay-minimization focus despite moderate OBSS occupancy, while slight npca_switch_bonus boost (0\u21920.02) allows NPCA only when OBSS duration clearly justifies the transition overhead."
+  },
+  {
+    "call_count": 11,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 899.2119999999999,
+      "npca_switch_ratio": 0.5309352517985612,
+      "avg_throughput_slots": 786840.2530215831,
+      "avg_option_duration": 646.0273381294965,
+      "current_epsilon": 0.050135096809448575,
+      "episode_progress": 0.551
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.18,
+    "qos_priority": "latency",
+    "reasoning": "Video call intent prioritizes latency minimization; low OBSS occupancy (0.0178) and moderate switch ratio (0.531) indicate current parameters are well-tuned, so reduced switch incentive (bonus -50%, cost +12.5%) discourages unnecessary NPCA transitions that add overhead without proportional latency benefit."
+  },
+  {
+    "call_count": 12,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0,
+      "avg_episode_reward": 1179.6079999999997,
+      "npca_switch_ratio": 0.556390977443609,
+      "avg_throughput_slots": 740455.0610633712,
+      "avg_option_duration": 582.1804511278195,
+      "current_epsilon": 0.050053249671122464,
+      "episode_progress": 0.601
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.005,
+    "npca_switch_cost": 0.2,
+    "qos_priority": "latency",
+    "reasoning": "Video call requires strict latency minimization; OBSS rate is 0.0000, so NPCA switching is unnecessary overhead\u2014reduced switch_bonus and increased switch_cost to strongly discourage switching and preserve latency predictability."
+  },
+  {
+    "call_count": 13,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.008910089100891009,
+      "avg_episode_reward": 900.49,
+      "npca_switch_ratio": 0.5147679324894515,
+      "avg_throughput_slots": 728852.6895218008,
+      "avg_option_duration": 582.2362869198312,
+      "current_epsilon": 0.05002641657432413,
+      "episode_progress": 0.651
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.25,
+    "qos_priority": "latency",
+    "reasoning": "Video call is delay-critical; maintain high latency_penalty and near-zero NPCA incentive since low OBSS occupancy (0.0089) means staying on primary channel minimizes switching overhead and jitter\u2014current parameters already well-aligned with intent, only increase npca_switch_cost slightly to further discourage unnecessary transitions."
+  },
+  {
+    "call_count": 14,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.04455044550445504,
+      "avg_episode_reward": 961.904,
+      "npca_switch_ratio": 0.5021216407355021,
+      "avg_throughput_slots": 789830.228288543,
+      "avg_option_duration": 594.4724186704385,
+      "current_epsilon": 0.05001335634601017,
+      "episode_progress": 0.701
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.25,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-critical video call; current parameters already prioritize latency with high penalty (0.20) and strong switching disincentive (net -0.25), perfectly aligned with intent. NPCA switch ratio of 0.50 is reasonable for latency apps (avoid unnecessary switching overhead). Maintain current configuration as it honors the intent and training is stable at 70% progress."
+  },
+  {
+    "call_count": 15,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 1039.6810000000003,
+      "npca_switch_ratio": 0.5247058823529411,
+      "avg_throughput_slots": 729562.6389411766,
+      "avg_option_duration": 587.9517647058824,
+      "current_epsilon": 0.050005829852083725,
+      "episode_progress": 0.751
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.25,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-minimization for video call; current parameters already strongly prioritize latency (penalty=0.2, bonus=0). Minor increase to npca_switch_bonus (0\u21920.02) justified because moderate OBSS occupancy (0.027) + balanced switch ratio (0.525) suggest selective NPCA switching can reduce delay during interference without excessive overhead; maintaining high latency_penalty ensures OBSS duration must clearly justify any switch."
+  },
+  {
+    "call_count": 16,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.017820178201782017,
+      "avg_episode_reward": 1127.519,
+      "npca_switch_ratio": 0.4919254658385093,
+      "avg_throughput_slots": 817962.144658385,
+      "avg_option_duration": 601.4509316770186,
+      "current_epsilon": 0.05000263792237581,
+      "episode_progress": 0.801
+    },
+    "throughput_weight": 0.52,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.27,
+    "qos_priority": "latency",
+    "reasoning": "Video call demands minimal delay; maintain high latency_penalty and low NPCA switching incentive (npca_switch_bonus reduced further, npca_switch_cost increased) since low OBSS occupancy (0.0178) means primary channel is largely uncontended and switching overhead outweighs interference gains."
+  },
+  {
+    "call_count": 17,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.035640356403564034,
+      "avg_episode_reward": 992.3599999999999,
+      "npca_switch_ratio": 0.4860406091370558,
+      "avg_throughput_slots": 727066.1923223357,
+      "avg_option_duration": 592.8299492385787,
+      "current_epsilon": 0.05000120320836739,
+      "episode_progress": 0.851
+    },
+    "throughput_weight": 0.55,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.25,
+    "qos_priority": "latency",
+    "reasoning": "User intent is latency-critical (video call); maintain high latency_penalty and low switching incentive (net bonus 0.02 - 0.25 = -0.23) to minimize OBSS avoidance overhead, while slightly reducing switching cost (0.27\u21920.25) to allow NPCA only when OBSS duration (592.8 slots) clearly justifies the transition."
+  },
+  {
+    "call_count": 18,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 977.3970000000003,
+      "npca_switch_ratio": 0.4527777777777778,
+      "avg_throughput_slots": 781275.3661805564,
+      "avg_option_duration": 588.2652777777778,
+      "current_epsilon": 0.050000597495592644,
+      "episode_progress": 0.901
+    },
+    "throughput_weight": 0.52,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.27,
+    "qos_priority": "latency",
+    "reasoning": "Video call demands strict latency minimization; maintained high latency_penalty and low npca_switch_bonus; slightly reduced throughput_weight and increased npca_switch_cost to discourage unnecessary NPCA switches that add switching overhead, keeping agent on stable primary channel unless OBSS duration clearly justifies the cost."
+  },
+  {
+    "call_count": 19,
+    "user_intent": "\ud654\uc0c1\ud68c\uc758, \uc9c0\uc5f0 \ucd5c\uc18c\ud654 (video call, minimize delay)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.026730267302673028,
+      "avg_episode_reward": 915.87,
+      "npca_switch_ratio": 0.4912043301759134,
+      "avg_throughput_slots": 736123.2957374831,
+      "avg_option_duration": 636.9431664411367,
+      "current_epsilon": 0.05000029316831777,
+      "episode_progress": 0.951
+    },
+    "throughput_weight": 0.52,
+    "latency_penalty": 0.2,
+    "npca_switch_bonus": 0.005,
+    "npca_switch_cost": 0.28,
+    "qos_priority": "latency",
+    "reasoning": "Video call intent demands minimal delay; current latency_penalty is already at target maximum, so marginally reduce switching incentive (lower npca_switch_bonus, raise npca_switch_cost) to discourage NPCA overhead during low OBSS occupancy (2.67%), keeping primary channel prioritized for predictable low-latency delivery."
+  }
+]

@@ -1,0 +1,382 @@
+[
+  {
+    "call_count": 1,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.16992169921699218,
+      "avg_episode_reward": 2737.367,
+      "npca_switch_ratio": 0.44493392070484583,
+      "avg_throughput_slots": 785397.0515907981,
+      "avg_option_duration": 433.57366617719043,
+      "current_epsilon": 0.16434684730139237,
+      "episode_progress": 0.051
+    },
+    "throughput_weight": 1.25,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.12,
+    "npca_switch_cost": 0.02,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH obss_occupancy_rate (0.17) with moderate npca_switch_ratio (0.445) indicates NPCA is underutilized; increased throughput_weight and introduced npca_switch_bonus to encourage switching, slightly raised latency_penalty for high option_duration (433.6), minimal switch_cost to avoid over-penalizing exploration during early training (5.1%)."
+  },
+  {
+    "call_count": 2,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.23787237872378725,
+      "avg_episode_reward": 2765.712,
+      "npca_switch_ratio": 0.4561059342815105,
+      "avg_throughput_slots": 787266.1177783231,
+      "avg_option_duration": 421.46738597351646,
+      "current_epsilon": 0.06553718758515197,
+      "episode_progress": 0.101
+    },
+    "throughput_weight": 1.45,
+    "latency_penalty": 0.095,
+    "npca_switch_bonus": 0.16,
+    "npca_switch_cost": 0.04,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.238) with moderate NPCA adoption (0.456) indicates room for increased switching incentive; moderate option duration (421.5 slots) justifies slight latency penalty increase; early training stage (10.1% progress, low epsilon) calls for conservative incremental adjustments (~15%) to stabilize learning."
+  },
+  {
+    "call_count": 3,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2646026460264603,
+      "avg_episode_reward": 2919.5570000000007,
+      "npca_switch_ratio": 0.44899860270144387,
+      "avg_throughput_slots": 795787.7259431747,
+      "avg_option_duration": 420.3232417326502,
+      "current_epsilon": 0.05189313909755803,
+      "episode_progress": 0.151
+    },
+    "throughput_weight": 1.65,
+    "latency_penalty": 0.11,
+    "npca_switch_bonus": 0.19,
+    "npca_switch_cost": 0.06,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH OBSS occupancy (0.2646) with moderate NPCA adoption (0.449) indicates underutilization of secondary channel; increase throughput_weight and npca_switch_bonus to encourage more NPCA switching, slightly raise latency_penalty to account for longer option duration (420.3 slots), and conservatively boost npca_switch_cost to prevent over-switching as policy matures."
+  },
+  {
+    "call_count": 4,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.22050220502205023,
+      "avg_episode_reward": 2834.9380000000006,
+      "npca_switch_ratio": 0.4421703950499762,
+      "avg_throughput_slots": 788702.5153498335,
+      "avg_option_duration": 427.78962398857686,
+      "current_epsilon": 0.05024517975329992,
+      "episode_progress": 0.201
+    },
+    "throughput_weight": 1.85,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.22,
+    "npca_switch_cost": 0.07,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.2205) with moderate NPCA adoption (0.442) indicates room to encourage switching; incremental 12% increase in throughput_weight and 16% boost to npca_switch_bonus (net incentive +0.15) will exploit available secondary channel capacity while maintaining training stability at low epsilon."
+  },
+  {
+    "call_count": 5,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.08955089550895509,
+      "avg_episode_reward": 2675.6589999999997,
+      "npca_switch_ratio": 0.4523456790123457,
+      "avg_throughput_slots": 776959.5828641967,
+      "avg_option_duration": 420.6158024691358,
+      "current_epsilon": 0.050032982978602335,
+      "episode_progress": 0.251
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.11,
+    "npca_switch_bonus": 0.25,
+    "npca_switch_cost": 0.09,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.0896) with moderate NPCA adoption (0.452) suggests underutilization of secondary channel; increase throughput_weight and npca_switch_bonus modestly to encourage more switching, while slightly raising npca_switch_cost to prevent over-switching as training matures."
+  },
+  {
+    "call_count": 6,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.19449194491944918,
+      "avg_episode_reward": 2534.630999999999,
+      "npca_switch_ratio": 0.4638646847770374,
+      "avg_throughput_slots": 753951.1140953371,
+      "avg_option_duration": 413.8780112762686,
+      "current_epsilon": 0.05000489391026173,
+      "episode_progress": 0.301
+    },
+    "throughput_weight": 2.2,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.28,
+    "npca_switch_cost": 0.11,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH OBSS occupancy (0.1945) with moderate NPCA adoption (0.464) suggests underutilization of secondary channel; incremental increases to throughput_weight and npca_switch_bonus encourage more aggressive NPCA switching to exploit available capacity, while modest latency_penalty and cost adjustments maintain balanced stability during mid-training phase."
+  },
+  {
+    "call_count": 7,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.25371253712537123,
+      "avg_episode_reward": 2791.389,
+      "npca_switch_ratio": 0.4743158905424868,
+      "avg_throughput_slots": 781209.9826692273,
+      "avg_option_duration": 424.3130100816131,
+      "current_epsilon": 0.05000063698550961,
+      "episode_progress": 0.351
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.135,
+    "npca_switch_bonus": 0.24,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.254) with moderate switch ratio (0.474) suggests balanced switching; slight reduction in npca_switch_bonus and increase in npca_switch_cost discourage marginal switches while maintaining throughput focus; latency penalty increased for high avg_option_duration (424.3 slots) to better account for switching overhead."
+  },
+  {
+    "call_count": 8,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.23679236792367925,
+      "avg_episode_reward": 2847.3260000000005,
+      "npca_switch_ratio": 0.44571975131516023,
+      "avg_throughput_slots": 794777.375490195,
+      "avg_option_duration": 416.908656145385,
+      "current_epsilon": 0.0500000829092725,
+      "episode_progress": 0.401
+    },
+    "throughput_weight": 2.2,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.27,
+    "npca_switch_cost": 0.13,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.237) with moderate switch ratio (0.446) indicates NPCA is underutilized; increase throughput_weight and npca_switch_bonus to encourage more switching, reduce latency_penalty slightly given stable training at 40%, and lower npca_switch_cost to improve net switching incentive."
+  },
+  {
+    "call_count": 9,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.14697146971469716,
+      "avg_episode_reward": 2756.804000000001,
+      "npca_switch_ratio": 0.5128571428571429,
+      "avg_throughput_slots": 768787.0210476194,
+      "avg_option_duration": 414.377619047619,
+      "current_epsilon": 0.05000001064134523,
+      "episode_progress": 0.451
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.11,
+    "npca_switch_bonus": 0.22,
+    "npca_switch_cost": 0.16,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH obss_occupancy_rate (0.147) with moderate npca_switch_ratio (0.513) suggests balanced NPCA utilization; modest reductions in throughput_weight and npca_switch_bonus prevent over-switching while increased npca_switch_cost (0.16) discourages marginal switches on long-duration OBSSs (414.4 slots); slight latency_penalty reduction reflects stable training at 45% progress."
+  },
+  {
+    "call_count": 10,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.14121141211412114,
+      "avg_episode_reward": 2886.1709999999994,
+      "npca_switch_ratio": 0.5106190691369182,
+      "avg_throughput_slots": 765124.6477180291,
+      "avg_option_duration": 422.6000903750565,
+      "current_epsilon": 0.05000000120291396,
+      "episode_progress": 0.501
+    },
+    "throughput_weight": 1.8,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.18,
+    "npca_switch_cost": 0.18,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.1412) with balanced switch ratio (0.511) suggests slightly reduced NPCA aggressiveness to prevent over-switching; modest latency penalty increase accounts for elevated option duration (422.6 slots); balanced tuning maintains stability at 50% training progress."
+  },
+  {
+    "call_count": 11,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.1894518945189452,
+      "avg_episode_reward": 2901.7889999999998,
+      "npca_switch_ratio": 0.49377593360995853,
+      "avg_throughput_slots": 780440.1746196408,
+      "avg_option_duration": 415.6574458275703,
+      "current_epsilon": 0.05000000014252283,
+      "episode_progress": 0.551
+    },
+    "throughput_weight": 1.95,
+    "latency_penalty": 0.11,
+    "npca_switch_bonus": 0.2,
+    "npca_switch_cost": 0.16,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.1895) with balanced switch ratio (0.494) suggests moderate NPCA utilization; slight increase in throughput_weight and npca_switch_bonus encourages better exploitation of secondary channel while reducing switching cost to lower transition overhead given substantial avg_option_duration (415.7 slots)."
+  },
+  {
+    "call_count": 12,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.22995229952299523,
+      "avg_episode_reward": 2866.06,
+      "npca_switch_ratio": 0.5091078935077067,
+      "avg_throughput_slots": 781224.7373657178,
+      "avg_option_duration": 424.9397477814106,
+      "current_epsilon": 0.05000000001754032,
+      "episode_progress": 0.601
+    },
+    "throughput_weight": 1.85,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.18,
+    "npca_switch_cost": 0.18,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.23) with near-balanced switch ratio (0.509) and strong throughput (781k slots/ep) suggests stable operation; slight latency_penalty increase accounts for long avg_option_duration (424.9 slots), while modest reductions to both switch incentives (bonus\u2212cost remains neutral) prevent over-switching and preserve energy efficiency as training matures to 60%."
+  },
+  {
+    "call_count": 13,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.17433174331743317,
+      "avg_episode_reward": 2785.6530000000002,
+      "npca_switch_ratio": 0.46213971665852466,
+      "avg_throughput_slots": 789358.9304103564,
+      "avg_option_duration": 416.4049829018075,
+      "current_epsilon": 0.05000000000235256,
+      "episode_progress": 0.651
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.11,
+    "npca_switch_bonus": 0.22,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH obss_occupancy_rate (0.1743) with moderate switch ratio (0.462) indicates NPCA is underutilized; increase throughput_weight and npca_switch_bonus to encourage switching, slightly reduce latency_penalty due to long avg_option_duration (416.4), and decrease npca_switch_cost to lower switching overhead resistance during high interference periods."
+  },
+  {
+    "call_count": 14,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.22374223742237423,
+      "avg_episode_reward": 2955.488,
+      "npca_switch_ratio": 0.4644005512172715,
+      "avg_throughput_slots": 793586.4600137799,
+      "avg_option_duration": 431.2090032154341,
+      "current_epsilon": 0.05000000000027874,
+      "episode_progress": 0.701
+    },
+    "throughput_weight": 2.2,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.25,
+    "npca_switch_cost": 0.13,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH obss_occupancy (0.224) with moderate switch ratio (0.464) indicates room for increased NPCA incentivization; slightly boost throughput_weight and npca_switch_bonus to exploit secondary channel more aggressively while fine-tuning switch_cost downward to encourage exploration at 70% training progress."
+  },
+  {
+    "call_count": 15,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.1993519935199352,
+      "avg_episode_reward": 2907.2460000000005,
+      "npca_switch_ratio": 0.41022034692920767,
+      "avg_throughput_slots": 794165.3665963442,
+      "avg_option_duration": 427.9662447257384,
+      "current_epsilon": 0.050000000000034545,
+      "episode_progress": 0.751
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.14,
+    "npca_switch_bonus": 0.2,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.1994) with moderate NPCA adoption (0.410) suggests room for optimization; reduce throughput_weight slightly to avoid over-aggressive switching, increase latency_penalty to respect option duration (428 slots), and rebalance switching incentives (lower bonus, higher cost) to discourage marginal switches while maintaining net switching benefit at +0.05."
+  },
+  {
+    "call_count": 16,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.14598145981459815,
+      "avg_episode_reward": 2900.719,
+      "npca_switch_ratio": 0.41500694766095414,
+      "avg_throughput_slots": 784875.3275358956,
+      "avg_option_duration": 421.43631310792034,
+      "current_epsilon": 0.05000000000000418,
+      "episode_progress": 0.801
+    },
+    "throughput_weight": 2.2,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.24,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH obss_occupancy_rate (0.146) with moderate npca_switch_ratio (0.415) indicates NPCA is underutilized; increase throughput_weight and npca_switch_bonus to encourage more switching, slightly reduce latency_penalty and npca_switch_cost to lower switching friction, maintaining balanced priority during late training phase."
+  },
+  {
+    "call_count": 17,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2559625596255963,
+      "avg_episode_reward": 3011.792,
+      "npca_switch_ratio": 0.37919776119402987,
+      "avg_throughput_slots": 818770.8337686564,
+      "avg_option_duration": 419.1641791044776,
+      "current_epsilon": 0.050000000000000516,
+      "episode_progress": 0.851
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.14,
+    "npca_switch_bonus": 0.18,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.256) with moderate NPCA adoption (0.379) suggests underexploitation; reduced switch bonus and increased cost discourage marginal switches while slightly raising latency penalty to account for extended option duration (419.2 slots), ensuring efficiency at 85% training progress."
+  },
+  {
+    "call_count": 18,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.1908019080190802,
+      "avg_episode_reward": 2813.869,
+      "npca_switch_ratio": 0.3931829092654825,
+      "avg_throughput_slots": 792496.742366781,
+      "avg_option_duration": 428.7906865098416,
+      "current_epsilon": 0.05000000000000007,
+      "episode_progress": 0.901
+    },
+    "throughput_weight": 2.2,
+    "latency_penalty": 0.12,
+    "npca_switch_bonus": 0.22,
+    "npca_switch_cost": 0.12,
+    "qos_priority": "balanced",
+    "reasoning": "HIGH OBSS occupancy (0.1908) with moderate NPCA adoption (0.393) indicates underutilization of secondary channel; increase throughput_weight and npca_switch_bonus to encourage switching, reduce latency_penalty and npca_switch_cost to lower switching friction in late training (90% progress, low epsilon=0.05)."
+  },
+  {
+    "call_count": 19,
+    "user_intent": "",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.22374223742237423,
+      "avg_episode_reward": 3001.897,
+      "npca_switch_ratio": 0.3601108033240997,
+      "avg_throughput_slots": 804209.922322254,
+      "avg_option_duration": 429.202216066482,
+      "current_epsilon": 0.05000000000000001,
+      "episode_progress": 0.951
+    },
+    "throughput_weight": 2.0,
+    "latency_penalty": 0.13,
+    "npca_switch_bonus": 0.18,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "balanced",
+    "reasoning": "High OBSS occupancy (0.224) with moderate NPCA adoption (0.36) suggests room for better switching decisions; reduced switch_bonus and increased switch_cost discourage marginal switching while slightly raising latency penalty to account for prolonged OBSS contention, maintaining throughput focus in late training."
+  }
+]

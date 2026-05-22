@@ -1,0 +1,6 @@
+episode,throughput,avg_option_duration,total_energy_uJ,npca_switch_ratio,scenario,method,run,intent
+0,2541,230.5,11511.225000002409,0.0,congested_npca,balanced,0,일반 웹 서핑
+1,2442,220.0,11436.084000001985,0.0,congested_npca,balanced,0,일반 웹 서핑
+2,2409,238.28205128205127,11436.084000001656,0.0,congested_npca,balanced,0,일반 웹 서핑
+3,1848,234.8372093023256,10158.687000000546,0.0,congested_npca,balanced,0,일반 웹 서핑
+4,1980,284.44117647058823,10384.11000000099,0.0,congested_npca,balanced,0,일반 웹 서핑

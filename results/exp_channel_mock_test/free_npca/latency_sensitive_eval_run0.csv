@@ -1,0 +1,6 @@
+episode,throughput,avg_option_duration,total_energy_uJ,npca_switch_ratio,scenario,method,run,intent
+0,3564,159.62745098039215,14401.407000003319,0.19607843137254902,free_npca,latency_sensitive,0,"화상회의, 지연 최소화"
+1,4043,154.12,15188.472000004203,0.24,free_npca,latency_sensitive,0,"화상회의, 지연 최소화"
+2,3226,185.91304347826087,13177.881000002795,0.2608695652173913,free_npca,latency_sensitive,0,"화상회의, 지연 최소화"
+3,2871,167.2,12878.844000002444,0.2,free_npca,latency_sensitive,0,"화상회의, 지연 최소화"
+4,3521,154.72727272727272,14221.470000003355,0.2909090909090909,free_npca,latency_sensitive,0,"화상회의, 지연 최소화"

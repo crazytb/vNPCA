@@ -32,9 +32,11 @@ class SemiMDPLearner:
         self.memory = ReplayMemory(memory_capacity)
     
     def select_action(self, state_tensor):
-        """Epsilon-greedy action selection for Semi-MDP"""
+        """Epsilon-greedy action selection; purely greedy when eval_mode=True."""
+        if getattr(self, 'eval_mode', False):
+            with torch.no_grad():
+                return self.policy_net(state_tensor).max(1)[1].item()
         eps_threshold = EPS_END + (EPS_START - EPS_END) * math.exp(-1. * self.steps_done / EPS_DECAY)
-        
         if random.random() > eps_threshold:
             with torch.no_grad():
                 return self.policy_net(state_tensor).max(1)[1].item()
@@ -334,6 +336,120 @@ def run_baseline_simulation(
     return episode_rewards, episode_throughputs, episode_avg_option_durations
 
 
+def evaluate_policy(
+    learner,
+    channels,
+    stas_config: list,
+    n_eval_episodes: int = 200,
+    num_slots_per_episode: int = None,
+    device=None,
+    llm_designer=None,
+    random_ppdu: bool = False,
+) -> "pd.DataFrame":
+    """
+    Greedy (ε=0) evaluation of a trained policy.
+
+    No gradient updates, no replay-memory writes.
+    If llm_designer is provided, its current params and context_vec are applied to
+    all NPCA STAs so the policy is evaluated under the final LLM reward context.
+
+    Returns a DataFrame with columns:
+        episode, throughput, avg_option_duration, total_energy_uJ, npca_switch_ratio
+    """
+    from drl_framework.random_access import STA, Simulator
+
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if num_slots_per_episode is None:
+        num_slots_per_episode = 11111
+
+    eval_params: dict = {}
+    eval_ctx_vec = None
+    if llm_designer is not None:
+        p = llm_designer.get_current_params()
+        eval_params = {
+            "throughput_weight": p["throughput_weight"],
+            "latency_penalty": p["latency_penalty"],
+            "npca_switch_bonus": p["npca_switch_bonus"],
+            "npca_switch_cost": p["npca_switch_cost"],
+        }
+        eval_ctx_vec = llm_designer.get_context_vec()
+
+    # Greedy mode: no exploration, no memory writes
+    learner.eval_mode = True
+    saved_memory = learner.memory
+    learner.memory = None
+    learner.policy_net.eval()
+
+    records = []
+    try:
+        for episode in range(n_eval_episodes):
+            for ch in channels:
+                ch.intra_occupied = False
+                ch.intra_end_slot = 0
+                ch.obss_traffic = []
+                ch.occupied_remain = 0
+                ch.obss_remain = 0
+
+            episode_decision_log = []
+            stas = []
+            for config in stas_config:
+                is_npca = config.get("npca_enabled", False)
+                sta = STA(
+                    sta_id=config["sta_id"],
+                    channel_id=config["channel_id"],
+                    primary_channel=channels[config["channel_id"]],
+                    npca_channel=channels[0] if config["channel_id"] == 1 else None,
+                    npca_enabled=is_npca,
+                    radio_transition_time=config.get("radio_transition_time", 1),
+                    ppdu_duration=config.get("ppdu_duration", 33),
+                    random_ppdu=random_ppdu,
+                    learner=learner if is_npca else None,
+                    num_slots_per_episode=num_slots_per_episode,
+                    **eval_params,
+                )
+                if is_npca:
+                    sta.decision_log = episode_decision_log
+                    sta.current_episode = episode
+                    if eval_ctx_vec is not None:
+                        sta.context_vec = list(eval_ctx_vec)
+                stas.append(sta)
+
+            simulator = Simulator(num_slots=num_slots_per_episode, channels=channels, stas=stas)
+            simulator.memory = None
+            simulator.device = device
+            simulator.run()
+
+            focal_stas = [sta for sta in stas if sta.channel_id == 1]
+            throughput = sum(sta.channel_occupancy_time for sta in focal_stas)
+            energy_uJ = sum(sta.episode_energy_uJ for sta in focal_stas)
+
+            tau_vals = [d["tau"] for d in episode_decision_log if "tau" in d]
+            avg_tau = sum(tau_vals) / len(tau_vals) if tau_vals else 0.0
+
+            n_decs = len(episode_decision_log)
+            npca_ratio = (sum(1 for d in episode_decision_log if d.get("action") == 1) / n_decs
+                          if n_decs > 0 else 0.0)
+
+            records.append({
+                "episode": episode,
+                "throughput": throughput,
+                "avg_option_duration": avg_tau,
+                "total_energy_uJ": energy_uJ,
+                "npca_switch_ratio": npca_ratio,
+            })
+
+            if episode % 50 == 0:
+                print(f"  Eval {episode:3d}: TP={throughput:.0f}, τ={avg_tau:.1f}, "
+                      f"E={energy_uJ:.0f}μJ, NPCA={npca_ratio:.2f}")
+    finally:
+        learner.eval_mode = False
+        learner.memory = saved_memory
+        learner.policy_net.train()
+
+    return pd.DataFrame(records)
+
+
 def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episode=1000, device=None, random_ppdu=False, llm_designer=None):
     """
     Semi-MDP를 사용한 NPCA STA 학습 함수
@@ -349,7 +465,7 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     # SemiMDPLearner 초기화
-    n_observations = 4  # obs feature 개수
+    n_observations = 8  # [obss_remain, rtt, tx_dur, cw_idx, ctx_tw, ctx_lp, ctx_sb, ctx_sc]
     n_actions = 2       # 0=StayPrimary, 1=GoNPCA
     learner = SemiMDPLearner(n_observations, n_actions, device)
     
@@ -399,9 +515,13 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
                 ppdu_duration=config.get("ppdu_duration", 33),
                 random_ppdu=random_ppdu,
                 learner=learner if config.get("npca_enabled", False) else None,
-                num_slots_per_episode=num_slots_per_episode
+                num_slots_per_episode=num_slots_per_episode,
+                throughput_weight=config.get("throughput_weight", 1.0),
+                latency_penalty=config.get("latency_penalty", 0.05),
+                npca_switch_bonus=config.get("npca_switch_bonus", 0.0),
+                npca_switch_cost=config.get("npca_switch_cost", 0.0),
             )
-            
+
             # CSV 로깅을 위한 설정 (NPCA enabled STA만)
             if config.get("npca_enabled", False):
                 sta.decision_log = decision_log
@@ -472,12 +592,15 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
                 window=llm_designer.update_interval,
             )
             new_params = llm_designer.design_reward_params(stats)
+            ctx_vec = llm_designer.get_context_vec()
             for sta in stas:
                 if sta.npca_enabled:
                     sta.update_reward_params(
                         throughput_weight=new_params["throughput_weight"],
                         latency_penalty=new_params["latency_penalty"],
                         npca_switch_bonus=new_params["npca_switch_bonus"],
+                        npca_switch_cost=new_params["npca_switch_cost"],
+                        context_vec=ctx_vec,
                     )
             llm_entry = {
                 "episode": episode,
@@ -488,6 +611,7 @@ def train_semi_mdp(channels, stas_config, num_episodes=100, num_slots_per_episod
             print(f"  [LLM] ep={episode}: tw={new_params['throughput_weight']:.3f}, "
                   f"lp={new_params['latency_penalty']:.4f}, "
                   f"sb={new_params['npca_switch_bonus']:.3f}, "
+                  f"sc={new_params['npca_switch_cost']:.3f}, "
                   f"qos={new_params['qos_priority']} | {new_params['reasoning']}")
 
         # 진행 상황 출력

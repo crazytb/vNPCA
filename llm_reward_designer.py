@@ -12,57 +12,75 @@ vNPCA 아키텍처 매핑:
 
 import json
 import os
+import time
 import anthropic
 
 DEFAULT_PARAMS = {
     "throughput_weight": 1.0,
     "latency_penalty": 0.05,
     "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.0,
 }
 
 PARAM_BOUNDS = {
     "throughput_weight": (0.5, 3.0),
     "latency_penalty": (0.01, 0.2),
     "npca_switch_bonus": (0.0, 0.5),
+    "npca_switch_cost": (0.0, 0.3),
 }
 
-QOS_PRIORITIES = ("throughput", "latency", "balanced")
+QOS_PRIORITIES = ("throughput", "latency", "energy", "balanced")
+
+# Normalization bounds for context vector (same as PARAM_BOUNDS)
+_CTX_NORM = {
+    "throughput_weight":  (0.5, 3.0),
+    "latency_penalty":    (0.01, 0.2),
+    "npca_switch_bonus":  (0.0, 0.5),
+    "npca_switch_cost":   (0.0, 0.3),
+}
 
 _SYSTEM_PROMPT = """You are an expert in IEEE 802.11bn Non-Primary Channel Access (NPCA) optimization acting as an AP-side QoS policy manager.
 
 Your task is to design reward function parameters for a DRL agent that decides whether to stay on the primary channel (action=0) or switch to the NPCA secondary channel (action=1) when OBSS interference is detected.
 
 ## Reward Formula
-  reward = throughput_weight * successful_tx_slots
-         - latency_penalty   * option_duration
-         + npca_switch_bonus * (1 if action==NPCA else 0)
+  reward = throughput_weight  * successful_tx_slots
+         - latency_penalty    * option_duration
+         + npca_switch_bonus  * (1 if action==NPCA else 0)
+         - npca_switch_cost   * (1 if action==NPCA else 0)
+
+npca_switch_bonus encourages switching; npca_switch_cost penalizes switching energy overhead.
+Net switching incentive = npca_switch_bonus - npca_switch_cost.
 
 ## CRITICAL: User Intent comes first
 When a user QoS intent is provided, it is your PRIMARY directive. Translate the intent into parameter choices BEFORE considering network statistics. Network stats are secondary — use them only to fine-tune the magnitude of adjustments.
 
 ### Intent → Parameter mapping
 - Latency-sensitive intent (e.g. "video call", "real-time", "minimize delay"):
-  → HIGH latency_penalty (0.1–0.2), LOW npca_switch_bonus (0–0.05), qos_priority="latency"
+  → HIGH latency_penalty (0.1–0.2), LOW npca_switch_bonus (0–0.05), LOW npca_switch_cost (0–0.05), qos_priority="latency"
   → NPCA switching should only happen when OBSS duration clearly justifies the overhead
 - Throughput-hungry intent (e.g. "file download", "maximize speed", "high bandwidth"):
-  → HIGH throughput_weight (1.5–3.0), HIGH npca_switch_bonus (0.1–0.3), qos_priority="throughput"
+  → HIGH throughput_weight (1.5–3.0), HIGH npca_switch_bonus (0.1–0.3), LOW npca_switch_cost (0–0.05), qos_priority="throughput"
   → Aggressively exploit NPCA to increase successful TX slots
+- Energy-saving intent (e.g. "battery saving", "low power", "energy efficient"):
+  → MODERATE throughput_weight (0.8–1.2), MODERATE latency_penalty (0.05–0.1), HIGH npca_switch_cost (0.1–0.25), LOW npca_switch_bonus (0–0.05), qos_priority="energy"
+  → Switch to NPCA only when long OBSS clearly saves more energy than the radio transition cost
 - Balanced / no intent:
   → Use network statistics as the primary guide (see below), qos_priority="balanced"
 
 ## Network-stat guidelines (when no dominant intent, or for fine-tuning magnitude)
 - HIGH obss_occupancy_rate (>0.05) + LOW npca_switch_ratio (<0.3): NPCA underutilized → increase throughput_weight/npca_switch_bonus
-- LOW obss_occupancy_rate (<0.02) + HIGH npca_switch_ratio (>0.7): over-switching → decrease throughput_weight/npca_switch_bonus
+- LOW obss_occupancy_rate (<0.02) + HIGH npca_switch_ratio (>0.7): over-switching → decrease throughput_weight/npca_switch_bonus, increase npca_switch_cost
 - HIGH avg_option_duration: switching overhead large → increase latency_penalty
 - Early training (high epsilon, low progress): be conservative, make smaller adjustments
 
 ## Constraints
-throughput_weight ∈ [0.5, 3.0], latency_penalty ∈ [0.01, 0.2], npca_switch_bonus ∈ [0.0, 0.5]
+throughput_weight ∈ [0.5, 3.0], latency_penalty ∈ [0.01, 0.2], npca_switch_bonus ∈ [0.0, 0.5], npca_switch_cost ∈ [0.0, 0.3]
 Make incremental adjustments (~10–30% per update).
 
 ## Output Format
 Respond with ONLY a valid JSON object (no markdown, no extra text):
-{"throughput_weight": <float>, "latency_penalty": <float>, "npca_switch_bonus": <float>, "qos_priority": "<throughput|latency|balanced>", "reasoning": "<one concise sentence explaining how intent was honored>"}"""
+{"throughput_weight": <float>, "latency_penalty": <float>, "npca_switch_bonus": <float>, "npca_switch_cost": <float>, "qos_priority": "<throughput|latency|energy|balanced>", "reasoning": "<one concise sentence explaining how intent was honored>"}"""
 
 
 class LLMRewardDesigner:
@@ -125,6 +143,7 @@ class LLMRewardDesigner:
             f"- throughput_weight:  {self.current_params['throughput_weight']:.4f}\n"
             f"- latency_penalty:    {self.current_params['latency_penalty']:.4f}\n"
             f"- npca_switch_bonus:  {self.current_params['npca_switch_bonus']:.4f}\n"
+            f"- npca_switch_cost:   {self.current_params['npca_switch_cost']:.4f}\n"
             f"- qos_priority:       {self.current_qos_priority}\n"
             f"\nDesign updated parameters that best satisfy the user intent and network conditions."
         )
@@ -140,46 +159,76 @@ class LLMRewardDesigner:
 
         user_prompt = self.build_user_prompt(network_stats)
 
-        try:
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=256,
-                system=[
-                    {
-                        "type": "text",
-                        "text": _SYSTEM_PROMPT,
-                        "cache_control": {"type": "ephemeral"},
-                    }
-                ],
-                messages=[{"role": "user", "content": user_prompt}],
-            )
-            raw = response.content[0].text.strip()
-            if raw.startswith("```"):
-                raw = raw.split("```")[1]
-                if raw.startswith("json"):
-                    raw = raw[4:]
-                raw = raw.strip()
-            result = json.loads(raw)
+        # Retry on transient server overload (HTTP 529) with exponential backoff.
+        _retry_delays = [5, 15, 30]
+        last_error: Exception | None = None
 
-            tw = float(result.get("throughput_weight", self.current_params["throughput_weight"]))
-            lp = float(result.get("latency_penalty", self.current_params["latency_penalty"]))
-            sb = float(result.get("npca_switch_bonus", self.current_params["npca_switch_bonus"]))
-            qp = result.get("qos_priority", self.current_qos_priority)
-            if qp not in QOS_PRIORITIES:
-                qp = "balanced"
-            tw = max(PARAM_BOUNDS["throughput_weight"][0], min(PARAM_BOUNDS["throughput_weight"][1], tw))
-            lp = max(PARAM_BOUNDS["latency_penalty"][0], min(PARAM_BOUNDS["latency_penalty"][1], lp))
-            sb = max(PARAM_BOUNDS["npca_switch_bonus"][0], min(PARAM_BOUNDS["npca_switch_bonus"][1], sb))
-            reasoning = result.get("reasoning", "")
+        for attempt, delay in enumerate([0] + _retry_delays):
+            if delay:
+                print(f"  [LLM] OverloadedError, retrying in {delay}s (attempt {attempt+1}/{len(_retry_delays)+1})…")
+                time.sleep(delay)
+            try:
+                response = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=256,
+                    system=[
+                        {
+                            "type": "text",
+                            "text": _SYSTEM_PROMPT,
+                            "cache_control": {"type": "ephemeral"},
+                        }
+                    ],
+                    messages=[{"role": "user", "content": user_prompt}],
+                )
+                last_error = None
+                break  # success
+            except anthropic.OverloadedError as e:
+                last_error = e
+                continue
+            except (anthropic.APIError, anthropic.APIConnectionError) as e:
+                last_error = e
+                break  # non-retryable API error
 
-        except (json.JSONDecodeError, KeyError, ValueError, anthropic.APIError) as e:
+        if last_error is not None:
             tw = self.current_params["throughput_weight"]
             lp = self.current_params["latency_penalty"]
             sb = self.current_params["npca_switch_bonus"]
+            sc = self.current_params["npca_switch_cost"]
             qp = self.current_qos_priority
-            reasoning = f"Error ({type(e).__name__}), kept previous params."
+            reasoning = f"Error ({type(last_error).__name__}), kept previous params."
+        else:
+            try:
+                raw = response.content[0].text.strip()
+                if raw.startswith("```"):
+                    raw = raw.split("```")[1]
+                    if raw.startswith("json"):
+                        raw = raw[4:]
+                    raw = raw.strip()
+                result = json.loads(raw)
 
-        self.current_params = {"throughput_weight": tw, "latency_penalty": lp, "npca_switch_bonus": sb}
+                tw = float(result.get("throughput_weight", self.current_params["throughput_weight"]))
+                lp = float(result.get("latency_penalty", self.current_params["latency_penalty"]))
+                sb = float(result.get("npca_switch_bonus", self.current_params["npca_switch_bonus"]))
+                sc = float(result.get("npca_switch_cost", self.current_params["npca_switch_cost"]))
+                qp = result.get("qos_priority", self.current_qos_priority)
+                if qp not in QOS_PRIORITIES:
+                    qp = "balanced"
+                tw = max(PARAM_BOUNDS["throughput_weight"][0], min(PARAM_BOUNDS["throughput_weight"][1], tw))
+                lp = max(PARAM_BOUNDS["latency_penalty"][0], min(PARAM_BOUNDS["latency_penalty"][1], lp))
+                sb = max(PARAM_BOUNDS["npca_switch_bonus"][0], min(PARAM_BOUNDS["npca_switch_bonus"][1], sb))
+                sc = max(PARAM_BOUNDS["npca_switch_cost"][0], min(PARAM_BOUNDS["npca_switch_cost"][1], sc))
+                reasoning = result.get("reasoning", "")
+
+            except (json.JSONDecodeError, KeyError, ValueError) as e:
+                tw = self.current_params["throughput_weight"]
+                lp = self.current_params["latency_penalty"]
+                sb = self.current_params["npca_switch_bonus"]
+                sc = self.current_params["npca_switch_cost"]
+                qp = self.current_qos_priority
+                reasoning = f"Error ({type(e).__name__}), kept previous params."
+
+        self.current_params = {"throughput_weight": tw, "latency_penalty": lp,
+                               "npca_switch_bonus": sb, "npca_switch_cost": sc}
         self.current_qos_priority = qp
         self.call_count += 1
 
@@ -190,13 +239,14 @@ class LLMRewardDesigner:
             "throughput_weight": tw,
             "latency_penalty": lp,
             "npca_switch_bonus": sb,
+            "npca_switch_cost": sc,
             "qos_priority": qp,
             "reasoning": reasoning,
         }
         self.call_history.append(entry)
 
         return {"throughput_weight": tw, "latency_penalty": lp, "npca_switch_bonus": sb,
-                "qos_priority": qp, "reasoning": reasoning}
+                "npca_switch_cost": sc, "qos_priority": qp, "reasoning": reasoning}
 
     def _mock_design(self, network_stats: dict) -> dict:
         """Deterministic mock for testing without API calls. Intent takes priority."""
@@ -208,23 +258,34 @@ class LLMRewardDesigner:
         tw = self.current_params["throughput_weight"]
         lp = self.current_params["latency_penalty"]
         sb = self.current_params["npca_switch_bonus"]
+        sc = self.current_params["npca_switch_cost"]
 
         intent = self.user_intent.lower()
         _latency_kw = ("latency", "delay", "지연", "video", "화상", "voip", "real-time", "realtime", "gaming")
         _throughput_kw = ("throughput", "speed", "속도", "download", "다운로드", "bandwidth", "빠르게", "파일")
+        _energy_kw = ("energy", "battery", "power", "에너지", "배터리", "전력", "low power", "절전", "efficient")
 
         if intent and any(kw in intent for kw in _latency_kw):
             lp = min(PARAM_BOUNDS["latency_penalty"][1], max(lp, 0.12))
             sb = max(PARAM_BOUNDS["npca_switch_bonus"][0], min(sb, 0.03))
+            sc = max(PARAM_BOUNDS["npca_switch_cost"][0], min(sc, 0.03))
             tw = max(PARAM_BOUNDS["throughput_weight"][0], min(tw, 1.2))
             qp = "latency"
             reasoning = f"Mock: latency-sensitive intent detected → high latency_penalty, suppressed npca_switch_bonus"
         elif intent and any(kw in intent for kw in _throughput_kw):
             tw = min(PARAM_BOUNDS["throughput_weight"][1], max(tw, 1.8))
             sb = min(PARAM_BOUNDS["npca_switch_bonus"][1], max(sb, 0.15))
+            sc = max(PARAM_BOUNDS["npca_switch_cost"][0], min(sc, 0.03))
             lp = max(PARAM_BOUNDS["latency_penalty"][0], min(lp, 0.04))
             qp = "throughput"
             reasoning = f"Mock: throughput-hungry intent detected → high throughput_weight and npca_switch_bonus"
+        elif intent and any(kw in intent for kw in _energy_kw):
+            sc = min(PARAM_BOUNDS["npca_switch_cost"][1], max(sc, 0.15))
+            sb = max(PARAM_BOUNDS["npca_switch_bonus"][0], min(sb, 0.03))
+            tw = max(PARAM_BOUNDS["throughput_weight"][0], min(tw, 1.2))
+            lp = max(PARAM_BOUNDS["latency_penalty"][0], min(lp, 0.08))
+            qp = "energy"
+            reasoning = f"Mock: energy-saving intent detected → high npca_switch_cost to discourage unnecessary NPCA transitions"
         elif obss > 0.05 and switch_ratio < 0.3 and progress > 0.1:
             tw = min(PARAM_BOUNDS["throughput_weight"][1], tw * 1.1)
             sb = min(PARAM_BOUNDS["npca_switch_bonus"][1], sb + 0.05)
@@ -248,7 +309,9 @@ class LLMRewardDesigner:
         tw = round(tw, 4)
         lp = round(lp, 4)
         sb = round(sb, 4)
-        self.current_params = {"throughput_weight": tw, "latency_penalty": lp, "npca_switch_bonus": sb}
+        sc = round(sc, 4)
+        self.current_params = {"throughput_weight": tw, "latency_penalty": lp,
+                               "npca_switch_bonus": sb, "npca_switch_cost": sc}
         self.current_qos_priority = qp
         self.call_count += 1
 
@@ -259,16 +322,35 @@ class LLMRewardDesigner:
             "throughput_weight": tw,
             "latency_penalty": lp,
             "npca_switch_bonus": sb,
+            "npca_switch_cost": sc,
             "qos_priority": qp,
             "reasoning": reasoning,
         }
         self.call_history.append(entry)
 
         return {"throughput_weight": tw, "latency_penalty": lp, "npca_switch_bonus": sb,
-                "qos_priority": qp, "reasoning": reasoning}
+                "npca_switch_cost": sc, "qos_priority": qp, "reasoning": reasoning}
 
     def get_current_params(self) -> dict:
         return dict(self.current_params)
+
+    def get_context_vec(self) -> list[float]:
+        """Return normalized reward params as context vector for DQN state input.
+
+        Maps each parameter to [0, 1] using its design bounds so that different
+        LLM outputs for the same intent are distinguishable by the agent.
+        Order: [tw_norm, lp_norm, sb_norm, sc_norm]
+        """
+        def _norm(val, key):
+            lo, hi = _CTX_NORM[key]
+            return (val - lo) / (hi - lo)
+
+        return [
+            _norm(self.current_params["throughput_weight"],  "throughput_weight"),
+            _norm(self.current_params["latency_penalty"],    "latency_penalty"),
+            _norm(self.current_params["npca_switch_bonus"],  "npca_switch_bonus"),
+            _norm(self.current_params["npca_switch_cost"],   "npca_switch_cost"),
+        ]
 
     def save_history(self, path: str):
         """Save LLM call history to JSON file."""

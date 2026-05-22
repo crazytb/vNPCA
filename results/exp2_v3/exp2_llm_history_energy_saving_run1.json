@@ -1,0 +1,382 @@
+[
+  {
+    "call_count": 1,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.14238142381423816,
+      "avg_episode_reward": 2732.0469999999996,
+      "npca_switch_ratio": 0.44017946161515453,
+      "avg_throughput_slots": 797051.9607178463,
+      "avg_option_duration": 430.97008973080756,
+      "current_epsilon": 0.1678292272450102,
+      "episode_progress": 0.051
+    },
+    "throughput_weight": 0.9,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.15,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent requires high npca_switch_cost (0.15) to penalize radio transitions; moderate latency_penalty (0.08) and reduced throughput_weight (0.9) discourage unnecessary switching; low npca_switch_bonus (0.02) ensures NPCA only activates when OBSS duration justifies energy overhead, aligning with battery-constrained operation."
+  },
+  {
+    "call_count": 2,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.16803168031680316,
+      "avg_episode_reward": 2982.8180000000007,
+      "npca_switch_ratio": 0.4782608695652174,
+      "avg_throughput_slots": 786704.0894021752,
+      "avg_option_duration": 425.1096014492754,
+      "current_epsilon": 0.06353442377883495,
+      "episode_progress": 0.101
+    },
+    "throughput_weight": 0.95,
+    "latency_penalty": 0.075,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.18,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent honored: increased npca_switch_cost to 0.18 to strongly discourage unnecessary switching overhead; reduced npca_switch_bonus to 0.01 to minimize switching incentive; maintained moderate throughput_weight (0.95) and latency_penalty (0.075) to preserve baseline performance while prioritizing battery conservation in early training phase with high OBSS occupancy (0.168)."
+  },
+  {
+    "call_count": 3,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.11043110431104311,
+      "avg_episode_reward": 2813.705,
+      "npca_switch_ratio": 0.4833965844402277,
+      "avg_throughput_slots": 782465.8206356749,
+      "avg_option_duration": 420.23434535104366,
+      "current_epsilon": 0.05169085843467539,
+      "episode_progress": 0.151
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.02,
+    "npca_switch_cost": 0.22,
+    "qos_priority": "energy",
+    "reasoning": "Battery-saving intent prioritized: increased npca_switch_cost to 0.22 to discourage frequent switching overhead, kept throughput_weight conservative (0.85), and raised latency_penalty slightly (0.08) to favor shorter dwells on primary channel; modest npca_switch_bonus (0.02) allows switching only when OBSS duration (420.2 slots avg) justifies energy investment."
+  },
+  {
+    "call_count": 4,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.15381153811538115,
+      "avg_episode_reward": 2929.853,
+      "npca_switch_ratio": 0.45681925436526666,
+      "avg_throughput_slots": 803409.458352998,
+      "avg_option_duration": 429.29306276545543,
+      "current_epsilon": 0.050210185742622516,
+      "episode_progress": 0.201
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.065,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.25,
+    "qos_priority": "energy",
+    "reasoning": "Battery-saving intent requires minimal NPCA switching overhead; increased npca_switch_cost (0.22\u21920.25) discourages unnecessary transitions, reduced latency_penalty (0.08\u21920.065) avoids penalizing longer primary-channel dwell, and slightly raised throughput_weight (0.85\u21920.92) ensures efficiency when staying on primary channel despite high OBSS occupancy (0.154)."
+  },
+  {
+    "call_count": 5,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.0975609756097561,
+      "avg_episode_reward": 2769.8569999999995,
+      "npca_switch_ratio": 0.4676938369781312,
+      "avg_throughput_slots": 797867.545874752,
+      "avg_option_duration": 414.40258449304173,
+      "current_epsilon": 0.050028817753219726,
+      "episode_progress": 0.251
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.075,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.28,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent prioritized: reduced throughput_weight to minimize radio activity, increased latency_penalty to discourage long OBSS waits, eliminated npca_switch_bonus (no incentive to switch), and raised npca_switch_cost to strongly penalize switching overhead given moderate OBSS occupancy (9.76%) and excessive switching ratio (46.8%)."
+  },
+  {
+    "call_count": 6,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.17109171091710917,
+      "avg_episode_reward": 2943.88,
+      "npca_switch_ratio": 0.47519703291608717,
+      "avg_throughput_slots": 795645.986694482,
+      "avg_option_duration": 429.9925822902179,
+      "current_epsilon": 0.05000345904184901,
+      "episode_progress": 0.301
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.085,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "User prioritizes battery saving; increased npca_switch_cost from 0.28\u21920.30 and slightly raised latency_penalty to discourage frequent switching overhead, while modest throughput_weight boost (0.85\u21920.92) and minimal switch bonus preserve efficient TX on primary channel during high OBSS occupancy (17.1%)."
+  },
+  {
+    "call_count": 7,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2052020520205202,
+      "avg_episode_reward": 2702.1570000000006,
+      "npca_switch_ratio": 0.452626411389298,
+      "avg_throughput_slots": 771070.3997299958,
+      "avg_option_duration": 410.85223367697597,
+      "current_epsilon": 0.05000047378181388,
+      "episode_progress": 0.351
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.06,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Battery-saving intent with moderate OBSS (20.5%) and moderate switching (45.3%): reduced throughput_weight to prioritize energy over speed, lowered latency_penalty since delay is less critical than power, eliminated npca_switch_bonus to discourage opportunistic switching, and slightly increased npca_switch_cost to enforce conservative NPCA use only when OBSS duration clearly justifies radio overhead."
+  },
+  {
+    "call_count": 8,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.18702187021870217,
+      "avg_episode_reward": 2834.1380000000004,
+      "npca_switch_ratio": 0.4854637748038763,
+      "avg_throughput_slots": 763674.1044531625,
+      "avg_option_duration": 409.0433779418551,
+      "current_epsilon": 0.05000005652861146,
+      "episode_progress": 0.401
+    },
+    "throughput_weight": 0.95,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "High OBSS occupancy (0.187) with moderate switch ratio (0.485) indicates excessive switching overhead; increased latency_penalty and npca_switch_cost to strongly discourage NPCA transitions, prioritizing battery conservation over throughput."
+  },
+  {
+    "call_count": 9,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.1989919899198992,
+      "avg_episode_reward": 2628.2630000000004,
+      "npca_switch_ratio": 0.5159079784630446,
+      "avg_throughput_slots": 756701.2489231513,
+      "avg_option_duration": 407.1992168379834,
+      "current_epsilon": 0.05000000762739909,
+      "episode_progress": 0.451
+    },
+    "throughput_weight": 0.95,
+    "latency_penalty": 0.075,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "User intent is energy-saving; current parameters already align well with this goal. High OBSS occupancy (0.199) and moderate switch ratio (0.516) suggest balanced switching behavior. Slight increase in npca_switch_cost (0.30\u21920.32) further discourages unnecessary radio transitions; maintain zero bonus to avoid energy-wasting switches. Marginal latency_penalty reduction (0.08\u21920.075) reflects that energy priority tolerates slightly longer OBSS periods if radio stays idle. No throughput_weight adjustment needed\u2014current 0.95 preserves stability in mid-training phase (45% progress)."
+  },
+  {
+    "call_count": 10,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.19719197191971918,
+      "avg_episode_reward": 2701.289,
+      "npca_switch_ratio": 0.48530120481927713,
+      "avg_throughput_slots": 765891.9393975898,
+      "avg_option_duration": 417.3175903614458,
+      "current_epsilon": 0.0500000010128285,
+      "episode_progress": 0.501
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "User prioritizes battery saving; high OBSS occupancy (0.1972) and moderate switch ratio (0.485) indicate balanced NPCA usage, so slightly increase npca_switch_cost to discourage unnecessary transitions while marginally reduce throughput_weight to conserve radio energy during non-critical periods."
+  },
+  {
+    "call_count": 11,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.21753217532175323,
+      "avg_episode_reward": 2795.0040000000004,
+      "npca_switch_ratio": 0.5053166897827092,
+      "avg_throughput_slots": 762651.4888349504,
+      "avg_option_duration": 415.168284789644,
+      "current_epsilon": 0.050000000122670536,
+      "episode_progress": 0.551
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.065,
+    "npca_switch_bonus": 0.01,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent honored: increased npca_switch_cost to further discourage unnecessary NPCA transitions (high 20.8% OBSS occupancy justifies selective switching only), reduced latency_penalty slightly to avoid over-penalizing moderate delays, minimal npca_switch_bonus to keep switching conservative, modest throughput_weight increase to maintain baseline performance without aggressive channel-hopping overhead."
+  },
+  {
+    "call_count": 12,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2139321393213932,
+      "avg_episode_reward": 2912.179,
+      "npca_switch_ratio": 0.5133214920071048,
+      "avg_throughput_slots": 760156.6967584365,
+      "avg_option_duration": 413.74378330373,
+      "current_epsilon": 0.05000000001349747,
+      "episode_progress": 0.601
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent prioritized: reduced throughput_weight to discourage unnecessary transmissions, increased latency_penalty to favor brief OBSS avoidance over aggressive switching, eliminated npca_switch_bonus to remove switching incentive, and raised npca_switch_cost to reflect radio transition overhead\u2014current 51.3% switch ratio indicates moderate NPCA use is acceptable given high OBSS occupancy (21.4%), but further discourage switching to minimize battery drain."
+  },
+  {
+    "call_count": 13,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2134821348213482,
+      "avg_episode_reward": 2851.7170000000006,
+      "npca_switch_ratio": 0.5046816479400749,
+      "avg_throughput_slots": 780717.588085206,
+      "avg_option_duration": 408.1301498127341,
+      "current_epsilon": 0.050000000001676155,
+      "episode_progress": 0.651
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.065,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Battery-saving intent prioritized: maintained zero switch bonus and increased switch cost by 6.7% to further discourage expensive NPCA transitions; slightly reduced latency_penalty (18.75% reduction) since energy concerns override delay sensitivity; modest throughput_weight increase (8.2%) to sustain baseline performance while minimizing radio state changes."
+  },
+  {
+    "call_count": 14,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.16137161371613717,
+      "avg_episode_reward": 2937.791000000001,
+      "npca_switch_ratio": 0.438375350140056,
+      "avg_throughput_slots": 801629.8609943974,
+      "avg_option_duration": 422.186741363212,
+      "current_epsilon": 0.05000000000020546,
+      "episode_progress": 0.701
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent prioritized: reduced throughput_weight to minimize radio activity, slightly increased latency_penalty to discourage prolonged channel occupation, maintained zero switch bonus, and increased switch cost to reflect high OBSS duration (422.2 slots) making channel transitions energetically expensive; conservative adjustments due to advanced training (70% progress) and moderate OBSS occupancy (0.1614)."
+  },
+  {
+    "call_count": 15,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.1999819998199982,
+      "avg_episode_reward": 2912.4570000000003,
+      "npca_switch_ratio": 0.48316737790422,
+      "avg_throughput_slots": 809631.806661924,
+      "avg_option_duration": 432.5742057847321,
+      "current_epsilon": 0.05000000000002603,
+      "episode_progress": 0.751
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.065,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Energy-saving intent prioritized: increased npca_switch_cost by 10% to further discourage unnecessary NPCA transitions given high OBSS occupancy (0.2), reduced latency_penalty slightly since battery life is primary concern over delay, maintained zero bonus to minimize switching incentives, and modestly increased throughput_weight to maintain baseline performance efficiency."
+  },
+  {
+    "call_count": 16,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.11736117361173612,
+      "avg_episode_reward": 2830.0679999999998,
+      "npca_switch_ratio": 0.46096654275092935,
+      "avg_throughput_slots": 768613.2348977674,
+      "avg_option_duration": 414.62732342007433,
+      "current_epsilon": 0.05000000000000313,
+      "episode_progress": 0.801
+    },
+    "throughput_weight": 0.95,
+    "latency_penalty": 0.075,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "User intent is battery saving; maintain high npca_switch_cost to discourage radio transitions, slightly increase latency_penalty to account for moderate OBSS occupancy (0.1174), and keep throughput_weight conservative\u2014switching to NPCA only when long OBSS duration clearly offsets energy overhead."
+  },
+  {
+    "call_count": 17,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2113221132211322,
+      "avg_episode_reward": 2708.453000000001,
+      "npca_switch_ratio": 0.4596423392943451,
+      "avg_throughput_slots": 764978.1188980194,
+      "avg_option_duration": 413.56935717738037,
+      "current_epsilon": 0.05000000000000042,
+      "episode_progress": 0.851
+    },
+    "throughput_weight": 0.95,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "User demands battery saving; maintain high switch_cost (0.32) to strongly discourage NPCA radio transitions, keep bonus at zero, and slightly increase latency_penalty (0.08) to favor staying on primary channel despite moderate OBSS (0.211), balancing energy conservation with acceptable QoS at advanced training stage (85%)."
+  },
+  {
+    "call_count": 18,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.15534155341553416,
+      "avg_episode_reward": 2876.2269999999994,
+      "npca_switch_ratio": 0.4709328526363227,
+      "avg_throughput_slots": 761488.8048445246,
+      "avg_option_duration": 409.42406489409643,
+      "current_epsilon": 0.05000000000000005,
+      "episode_progress": 0.901
+    },
+    "throughput_weight": 0.85,
+    "latency_penalty": 0.07,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Battery-saving intent prioritized: reduced throughput_weight and latency_penalty to discourage aggressive switching; increased npca_switch_cost to penalize radio transitions; maintained zero switch_bonus since high OBSS occupancy (0.1553) and moderate switch ratio (0.471) indicate current energy-conservative strategy is well-calibrated, requiring only fine-tuning near late training stage."
+  },
+  {
+    "call_count": 19,
+    "user_intent": "\ubc30\ud130\ub9ac \uc808\uc57d, \uc800\uc804\ub825 (battery saving, low power)",
+    "network_stats": {
+      "window_episodes": 50,
+      "obss_occupancy_rate": 0.2062820628206282,
+      "avg_episode_reward": 2806.5370000000003,
+      "npca_switch_ratio": 0.4280391243595715,
+      "avg_throughput_slots": 765349.1750815101,
+      "avg_option_duration": 406.3344201210992,
+      "current_epsilon": 0.05000000000000001,
+      "episode_progress": 0.951
+    },
+    "throughput_weight": 0.92,
+    "latency_penalty": 0.08,
+    "npca_switch_bonus": 0.0,
+    "npca_switch_cost": 0.3,
+    "qos_priority": "energy",
+    "reasoning": "Battery-saving intent maintained with slightly elevated switch cost (0.32) to further discourage NPCA transitions; modest throughput and latency increases accommodate high OBSS occupancy (0.206) and long option duration (406.3 slots) without compromising energy priority at late training stage (95.1%)."
+  }
+]

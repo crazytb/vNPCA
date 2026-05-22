@@ -1,0 +1,6 @@
+episode,throughput,avg_option_duration,total_energy_uJ,npca_switch_ratio,scenario,method,run,intent
+0,3597,221.65714285714284,14040.972000003227,0.0,light_npca,energy_saving,0,"배터리 절약, 저전력"
+1,3564,195.85365853658536,13915.737000003342,0.0,light_npca,energy_saving,0,"배터리 절약, 저전력"
+2,3795,187.90243902439025,14366.583000003604,0.0,light_npca,energy_saving,0,"배터리 절약, 저전력"
+3,3498,192.06976744186048,13615.17300000312,0.0,light_npca,energy_saving,0,"배터리 절약, 저전력"
+4,3465,211.39473684210526,13788.225000003193,0.0,light_npca,energy_saving,0,"배터리 절약, 저전력"

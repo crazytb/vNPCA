@@ -77,6 +77,12 @@ LLM_MODEL = "claude-haiku-4-5-20251001"
 LLM_UPDATE_INTERVAL = 50   # episodes between LLM reward-design calls
 LLM_USE_MOCK = False        # set True to skip API calls during unit tests
 
+# === Energy Model (IEEE 802.11ax TG, 11-14-0980-16-00ax, 20MHz, V=1.1V, NSS=1) ===
+SLOT_DURATION_US = 9.0             # μs per slot (802.11ax)
+ENERGY_TX_PER_SLOT_UJ = 2.772      # 280mA × 1.1V × 9μs = 308mW × 9μs
+ENERGY_LISTEN_PER_SLOT_UJ = 0.495  # 50mA × 1.1V × 9μs = 55mW × 9μs (backoff/frozen/CCA)
+ENERGY_NPCA_TRANSITION_UJ = 0.75   # TX↔Listen @ 75mW × 0.01ms per NPCA switch event
+
 # 시뮬레이션 설정 생성
 simulation_configs = []
 for ch0 in sta_values:

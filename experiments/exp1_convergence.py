@@ -83,6 +83,7 @@ def _build_df(method, run, obss_duration,
     tw_col  = [NAN] * n
     lp_col  = [NAN] * n
     sb_col  = [NAN] * n
+    sc_col  = [NAN] * n
     qp_col  = [None] * n
 
     if llm_log:
@@ -92,14 +93,15 @@ def _build_df(method, run, obss_duration,
                 tw_col[ep]  = entry.get("throughput_weight", NAN)
                 lp_col[ep]  = entry.get("latency_penalty", NAN)
                 sb_col[ep]  = entry.get("npca_switch_bonus", NAN)
+                sc_col[ep]  = entry.get("npca_switch_cost", NAN)
                 qp_col[ep]  = entry.get("qos_priority", None)
         # Forward-fill from first LLM call
-        last_tw, last_lp, last_sb, last_qp = NAN, NAN, NAN, None
+        last_tw, last_lp, last_sb, last_sc, last_qp = NAN, NAN, NAN, NAN, None
         for i in range(n):
             if not math.isnan(tw_col[i]):
-                last_tw, last_lp, last_sb, last_qp = tw_col[i], lp_col[i], sb_col[i], qp_col[i]
+                last_tw, last_lp, last_sb, last_sc, last_qp = tw_col[i], lp_col[i], sb_col[i], sc_col[i], qp_col[i]
             else:
-                tw_col[i], lp_col[i], sb_col[i], qp_col[i] = last_tw, last_lp, last_sb, last_qp
+                tw_col[i], lp_col[i], sb_col[i], sc_col[i], qp_col[i] = last_tw, last_lp, last_sb, last_sc, last_qp
 
     return pd.DataFrame({
         "episode":               range(n),
@@ -115,6 +117,7 @@ def _build_df(method, run, obss_duration,
         "throughput_weight":     tw_col,
         "latency_penalty":       lp_col,
         "npca_switch_bonus":     sb_col,
+        "npca_switch_cost":      sc_col,
         "qos_priority":          qp_col,
     })
 
@@ -350,6 +353,7 @@ def plot_exp1(df: pd.DataFrame, save_dir: str, window: int = 50):
                 throughput_weight=("throughput_weight", "mean"),
                 latency_penalty=("latency_penalty", "mean"),
                 npca_switch_bonus=("npca_switch_bonus", "mean"),
+                npca_switch_cost=("npca_switch_cost", "mean"),
             ).reset_index()
 
             episodes = mean_params["episode"].values
@@ -358,12 +362,14 @@ def plot_exp1(df: pd.DataFrame, save_dir: str, window: int = 50):
                     markersize=5, linewidth=1.8, where="post", label="throughput_weight")
             ax.step(episodes, mean_params["npca_switch_bonus"], "g-^",
                     markersize=5, linewidth=1.8, where="post", label="npca_switch_bonus")
+            ax.step(episodes, mean_params["npca_switch_cost"], "m-D",
+                    markersize=5, linewidth=1.8, where="post", label="npca_switch_cost")
             ax2p.step(episodes, mean_params["latency_penalty"], "r-s",
                       markersize=5, linewidth=1.8, where="post", label="latency_penalty")
             ax2p.set_ylabel("latency_penalty", color="red", fontsize=9)
 
             # qos_priority annotation
-            qp_colors = {"throughput": "blue", "latency": "red", "balanced": "green"}
+            qp_colors = {"throughput": "blue", "latency": "red", "energy": "purple", "balanced": "green"}
             prev_qp = None
             for _, row in param_rows.drop_duplicates("episode").iterrows():
                 qp = row["qos_priority"]
@@ -382,7 +388,7 @@ def plot_exp1(df: pd.DataFrame, save_dir: str, window: int = 50):
         ax_bg2 = ax_bg.twinx() if not hasattr(ax_bg, '_twin_created') else ax_bg
     ax.set_title("LLM Reward Param Evolution\n(vertical lines = qos_priority change)")
     ax.set_xlabel("Episode")
-    ax.set_ylabel("throughput_weight / npca_switch_bonus")
+    ax.set_ylabel("throughput_weight / npca_switch_bonus / npca_switch_cost")
     ax.grid(True, alpha=0.3)
 
     plt.tight_layout()

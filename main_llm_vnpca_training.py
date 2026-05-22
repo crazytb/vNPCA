@@ -451,6 +451,7 @@ def plot_comparison(results: list[dict], save_dir: str = "./results", window: in
             tw_vals = [h["throughput_weight"] for h in designer.call_history]
             lp_vals = [h["latency_penalty"] for h in designer.call_history]
             sb_vals = [h.get("npca_switch_bonus", 0.0) for h in designer.call_history]
+            sc_vals = [h.get("npca_switch_cost", 0.0) for h in designer.call_history]
             qp_vals = [h.get("qos_priority", "balanced") for h in designer.call_history]
 
             ax2 = ax.twinx()
@@ -460,10 +461,12 @@ def plot_comparison(results: list[dict], save_dir: str = "./results", window: in
                      where="post", label="latency_penalty")
             ax2.step(episodes, sb_vals, "g-^", markersize=5, linewidth=1.5,
                      where="post", label="npca_switch_bonus")
+            ax2.step(episodes, sc_vals, "m-D", markersize=5, linewidth=1.5,
+                     where="post", label="npca_switch_cost")
             ax2.set_ylabel("LLM reward params", fontsize=9)
 
             # Annotate qos_priority transitions
-            qp_colors = {"throughput": "blue", "latency": "red", "balanced": "green"}
+            qp_colors = {"throughput": "blue", "latency": "red", "energy": "purple", "balanced": "green"}
             prev_qp = None
             for ep, qp in zip(episodes, qp_vals):
                 if qp != prev_qp:

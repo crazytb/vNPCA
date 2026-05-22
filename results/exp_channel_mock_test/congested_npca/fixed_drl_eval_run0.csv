@@ -1,0 +1,6 @@
+episode,throughput,avg_option_duration,total_energy_uJ,npca_switch_ratio,scenario,method,run,intent
+0,2691,147.69354838709677,12712.164000002538,1.0,congested_npca,fixed_drl,0,
+1,3102,136.59375,14068.479000002857,1.0,congested_npca,fixed_drl,0,
+2,2913,133.5142857142857,13562.93100000291,1.0,congested_npca,fixed_drl,0,
+3,2766,151.36666666666667,13170.618000002929,1.0,congested_npca,fixed_drl,0,
+4,2901,151.24590163934425,12884.466000002625,1.0,congested_npca,fixed_drl,0,
