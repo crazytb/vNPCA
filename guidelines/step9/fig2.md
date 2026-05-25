@@ -13,7 +13,7 @@
 | 항목 | 값 |
 |---|---|
 | **Sweep 변수** | `num_stas` ∈ {2, 5, 10, 15, 20} |
-| `obss_rate` | 0.30 |
+| OBSS 채널 점유율 | 30% (`obss_rate = _occupancy_to_rate(0.30) ≈ 0.0039`) |
 | `snr_db_mean` | 14.0 dB |
 | `snr_db_std` | 2.0 dB |
 | `obss_min` | 20 슬롯 |
@@ -71,3 +71,5 @@ results/step9/fig2/
 | 날짜 | 변경 내용 |
 |---|---|
 | 2026-05-25 | 초안 작성 |
+| 2026-05-26 | `harq_sim/run_step9_fig2.py` 구현 완료; Panel (b)를 `collision_probability_primary` → `per_sta_throughput`으로 교체 (슬롯 기반 시뮬레이터에서 MAC 충돌이 극히 드물어 변별력 없음 — 대신 per-STA throughput이 contention 효과를 직접 표시) |
+| 2026-05-26 | `obss_rate=0.30` → OBSS 점유율 30%로 재정의. 기존 obss_rate=0.30은 per-slot 도착률로 실제 점유율 97%였음 — Legacy EDCA starvation 문제. `_occupancy_to_rate(0.30) ≈ 0.0039`로 변환하여 실제 30% 점유율 달성. |

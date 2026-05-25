@@ -190,6 +190,8 @@ class STA:
             "harq_tx_fail":        0,   # Step 3+: HARQ_RETX attempts that failed
             "policy_npca_chosen":    0, # Step 4+: policy chose NPCA (transition happened)
             "policy_primary_chosen": 0, # Step 4+: policy chose to stay primary (override)
+            "primary_collision_count": 0,  # MAC collisions on primary channel
+            "npca_collision_count":    0,  # MAC collisions on NPCA channel
         }
 
         # ── Trace log (optional, filled by simulator) ─────────────────────────
@@ -714,6 +716,12 @@ class STA:
             self.stats["primary_tx_fail"] += 1
         else:
             self.stats["npca_tx_fail"] += 1
+
+        if failure_reason == FailureReason.COLLISION:
+            if channel_type == ChannelType.PRIMARY:
+                self.stats["primary_collision_count"] += 1
+            else:
+                self.stats["npca_collision_count"] += 1
 
         if failure_reason == FailureReason.AP_ABSENCE_DUE_TO_NPCA:
             self.stats["ap_absence_failures"] += 1

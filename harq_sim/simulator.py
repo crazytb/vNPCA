@@ -372,9 +372,9 @@ class Simulator:
             delivered  = s["packets_delivered"]
             dropped    = s["packets_dropped"]
             total_pkts = delivered + dropped
-            collisions = sum(
-                1 for e in self.log
-                if e.sta_id == sta.sta_id and e.failure_reason == FailureReason.COLLISION.value
+            collisions = (
+                s.get("primary_collision_count", 0)
+                + s.get("npca_collision_count", 0)
             )
             qsrc_hist = sta._npca_qsrc_history
             avg_qsrc  = sum(qsrc_hist) / len(qsrc_hist) if qsrc_hist else None
@@ -387,11 +387,11 @@ class Simulator:
                 "npca_tx_fail":        s["npca_tx_fail"],
                 "ap_absence_failures": s["ap_absence_failures"],
                 "phy_error_failures":  s.get("phy_error_failures", 0),
-                "harq_tx_success":       s.get("harq_tx_success", 0),      # Step 3+
-                "harq_tx_fail":          s.get("harq_tx_fail", 0),        # Step 3+
-                "policy_npca_chosen":    s.get("policy_npca_chosen", 0),  # Step 4+
-                "policy_primary_chosen": s.get("policy_primary_chosen", 0),  # Step 4+
-                "avg_npca_qsrc":         avg_qsrc,                         # Step 5+
+                "harq_tx_success":       s.get("harq_tx_success", 0),
+                "harq_tx_fail":          s.get("harq_tx_fail", 0),
+                "policy_npca_chosen":    s.get("policy_npca_chosen", 0),
+                "policy_primary_chosen": s.get("policy_primary_chosen", 0),
+                "avg_npca_qsrc":         avg_qsrc,
                 "packets_delivered":   delivered,
                 "packets_dropped":     dropped,
                 "pdr":                 delivered / total_pkts if total_pkts else 0.0,
@@ -412,17 +412,9 @@ class Simulator:
 
         total_transitions = sum(sta.stats["npca_transitions"] for sta in self.stas)
 
-        # Channel-split collision counts from log
-        primary_col = sum(
-            1 for e in self.log
-            if e.failure_reason == FailureReason.COLLISION.value
-            and e.tx_channel == ChannelType.PRIMARY.value
-        )
-        npca_col = sum(
-            1 for e in self.log
-            if e.failure_reason == FailureReason.COLLISION.value
-            and e.tx_channel == ChannelType.NPCA.value
-        )
+        # Channel-split collision counts from STA stats (enable_trace-independent)
+        primary_col = sum(sta.stats.get("primary_collision_count", 0) for sta in self.stas)
+        npca_col    = sum(sta.stats.get("npca_collision_count",    0) for sta in self.stas)
 
         primary_tx_total = sum(
             sta.stats["primary_tx_success"] + sta.stats["primary_tx_fail"]

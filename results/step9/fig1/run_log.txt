@@ -1,0 +1,60 @@
+=== Figure 1 [FULL] — 50000 slots × 3 seeds ===
+  [1/48] obss_rate=0.10  Legacy EDCA               seed=42
+  [2/48] obss_rate=0.10  Legacy EDCA               seed=123
+  [3/48] obss_rate=0.10  Legacy EDCA               seed=456
+  [4/48] obss_rate=0.10  ARQ-only NPCA             seed=42
+  [5/48] obss_rate=0.10  ARQ-only NPCA             seed=123
+  [6/48] obss_rate=0.10  ARQ-only NPCA             seed=456
+  [7/48] obss_rate=0.10  HARQ-only                 seed=42
+  [8/48] obss_rate=0.10  HARQ-only                 seed=123
+  [9/48] obss_rate=0.10  HARQ-only                 seed=456
+  [10/48] obss_rate=0.10  Fixed-CW NPCA-HARQ        seed=42
+  [11/48] obss_rate=0.10  Fixed-CW NPCA-HARQ        seed=123
+  [12/48] obss_rate=0.10  Fixed-CW NPCA-HARQ        seed=456
+  [13/48] obss_rate=0.20  Legacy EDCA               seed=42
+  [14/48] obss_rate=0.20  Legacy EDCA               seed=123
+  [15/48] obss_rate=0.20  Legacy EDCA               seed=456
+  [16/48] obss_rate=0.20  ARQ-only NPCA             seed=42
+  [17/48] obss_rate=0.20  ARQ-only NPCA             seed=123
+  [18/48] obss_rate=0.20  ARQ-only NPCA             seed=456
+  [19/48] obss_rate=0.20  HARQ-only                 seed=42
+  [20/48] obss_rate=0.20  HARQ-only                 seed=123
+  [21/48] obss_rate=0.20  HARQ-only                 seed=456
+  [22/48] obss_rate=0.20  Fixed-CW NPCA-HARQ        seed=42
+  [23/48] obss_rate=0.20  Fixed-CW NPCA-HARQ        seed=123
+  [24/48] obss_rate=0.20  Fixed-CW NPCA-HARQ        seed=456
+  [25/48] obss_rate=0.30  Legacy EDCA               seed=42
+  [26/48] obss_rate=0.30  Legacy EDCA               seed=123
+  [27/48] obss_rate=0.30  Legacy EDCA               seed=456
+  [28/48] obss_rate=0.30  ARQ-only NPCA             seed=42
+  [29/48] obss_rate=0.30  ARQ-only NPCA             seed=123
+  [30/48] obss_rate=0.30  ARQ-only NPCA             seed=456
+  [31/48] obss_rate=0.30  HARQ-only                 seed=42
+  [32/48] obss_rate=0.30  HARQ-only                 seed=123
+  [33/48] obss_rate=0.30  HARQ-only                 seed=456
+  [34/48] obss_rate=0.30  Fixed-CW NPCA-HARQ        seed=42
+  [35/48] obss_rate=0.30  Fixed-CW NPCA-HARQ        seed=123
+  [36/48] obss_rate=0.30  Fixed-CW NPCA-HARQ        seed=456
+  [37/48] obss_rate=0.50  Legacy EDCA               seed=42
+  [38/48] obss_rate=0.50  Legacy EDCA               seed=123
+  [39/48] obss_rate=0.50  Legacy EDCA               seed=456
+  [40/48] obss_rate=0.50  ARQ-only NPCA             seed=42
+  [41/48] obss_rate=0.50  ARQ-only NPCA             seed=123
+  [42/48] obss_rate=0.50  ARQ-only NPCA             seed=456
+  [43/48] obss_rate=0.50  HARQ-only                 seed=42
+  [44/48] obss_rate=0.50  HARQ-only                 seed=123
+  [45/48] obss_rate=0.50  HARQ-only                 seed=456
+  [46/48] obss_rate=0.50  Fixed-CW NPCA-HARQ        seed=42
+  [47/48] obss_rate=0.50  Fixed-CW NPCA-HARQ        seed=123
+  [48/48] obss_rate=0.50  Fixed-CW NPCA-HARQ        seed=456
+The PostScript backend does not support transparency; partially transparent artists will be rendered opaque.
+  CSV → results/step9/fig1/data.csv
+Plotting...
+  Figure → /Users/crazytb/Code/vNPCA/manuscript/figure/fig1_combined.eps
+  Figure → /Users/crazytb/Code/vNPCA/manuscript/figure/fig1_combined.png
+  Figure → /Users/crazytb/Code/vNPCA/manuscript/figure/fig1_combined.pdf
+  Preview → results/step9/fig1/fig1_combined_preview.png
+
+Figure 1 완료
+  데이터  : results/step9/fig1/data.csv
+  논문용  : manuscript/figure/fig1_combined.{eps,png,pdf}

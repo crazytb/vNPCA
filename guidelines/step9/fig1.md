@@ -12,7 +12,7 @@
 
 | 항목 | 값 |
 |---|---|
-| **Sweep 변수** | `obss_rate` ∈ {0.10, 0.20, 0.30, 0.50} |
+| **Sweep 변수** | OBSS 점유율 ∈ {10%, 20%, 30%, 50%} (내부적으로 per-slot 도착률로 변환) |
 | `num_stas` | 5 |
 | `snr_db_mean` | 14.0 dB |
 | `snr_db_std` | 2.0 dB |
@@ -75,3 +75,5 @@ results/step9/fig1/
 | 날짜 | 변경 내용 |
 |---|---|
 | 2026-05-25 | 초안 작성 |
+| 2026-05-25 | `harq_sim/run_step9_fig1.py` 구현 완료; fast mode 검증 통과 |
+| 2026-05-26 | `obss_rate` 파라미터를 OBSS 채널 점유율(occupancy)로 재정의. 기존 obss_rate=0.10~0.50은 per-slot 도착률로 실제 점유율이 92~98%였음 — Legacy EDCA starvation 문제. 내부적으로 `_occupancy_to_rate(occ)`로 변환하여 원하는 점유율을 정확히 달성. x축 레이블도 "OBSS Channel Occupancy"로 변경. |
