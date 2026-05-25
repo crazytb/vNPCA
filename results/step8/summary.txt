@@ -1,0 +1,25 @@
+========================================================================================================================
+Step 8 Baseline Comparison Summary
+========================================================================================================================
+  Slots         : 50000
+  STAs          : 10
+  OBSS rate     : 0.05
+  OBSS duration : 20~200 slots
+  PPDU duration : 20 slots
+  SNR (mean)    : 14.0 dB  → MCS 3
+  SNR std dev   : 2.0 dB
+  Random seed   : 42
+
+Baseline                       |    TP    PDR   Delay     P95   ColP   Fair    E(μJ)   Ntr   Reward Profile
+-----------------------------------------------------------------------------------------------------------
+legacy_edca                    |   825  1.000   472.5  1894.0  0.000  0.898 295954.6     0  -3.6401 delay_sensitive
+arq_only_npca                  |  1761  0.988   215.1   797.0  0.000  0.989 348531.2  2369  -0.8943 delay_sensitive
+harq_only                      |   865  0.999   401.4  1420.0  0.000  0.884 296214.1     0  -2.4559 delay_sensitive
+fixed_cw_npca_harq             |  1792  0.993   215.1   766.0  0.000  0.968 348100.2  2520  -0.8173 delay_sensitive
+adaptive_cw_npca_harq          |   935  1.000   482.6  2336.0  0.000  0.907 300812.6   539  -4.7446 delay_sensitive
+llm_reward_npca_harq           |   935  1.000   482.6  2336.0  0.000  0.907 300812.6   539  -4.7446 delay_sensitive
+grid_best_reward_npca_harq     |   935  1.000   482.6  2336.0  0.000  0.907 300812.6   539  -3.7993 throughput
+
+Columns: TP=packets delivered, PDR, Delay=mean slots, P95=p95 slots,
+         ColP=collision prob, Fair=Jain fairness, E=total energy,
+         Ntr=NPCA transitions, Reward=profile score

@@ -1,0 +1,8 @@
+baseline,description,aggregate_throughput,packet_delivery_ratio,packet_loss_probability,mean_access_delay,p95_access_delay,p99_access_delay,collision_probability,collision_probability_primary,collision_probability_npca,jain_fairness_index,total_energy_uj,npca_transition_count,npca_transition_rate,reward,intent_name
+legacy_edca,"Legacy EDCA (NPCA 없음, HARQ 없음)",825,1.0,0.0,472.524,1894.0,5967.0,0.0,0.0,0.0,0.897626,295954.56,0,0.0,-3.640119,delay_sensitive
+arq_only_npca,"ARQ-only NPCA (NPCA 있음, HARQ 없음)",1761,0.987661,0.012339,215.122,797.0,1261.0,0.0,0.0,0.0,0.989133,348531.18,2369,0.04738,-0.894277,delay_sensitive
+harq_only,"HARQ-only (NPCA 없음, HARQ 있음)",865,0.998845,0.001155,401.385,1420.0,7823.0,0.0,0.0,0.0,0.884395,296214.138,0,0.0,-2.455896,delay_sensitive
+fixed_cw_npca_harq,Fixed-CW NPCA-HARQ,1792,0.992798,0.007202,215.117,766.0,1297.0,0.0,0.0,0.0,0.967802,348100.227,2520,0.0504,-0.81733,delay_sensitive
+adaptive_cw_npca_harq,Adaptive-CW NPCA-HARQ,935,1.0,0.0,482.611,2336.0,4001.0,0.0,0.0,0.0,0.907089,300812.622,539,0.01078,-4.744646,delay_sensitive
+llm_reward_npca_harq,LLM-reward NPCA-HARQ,935,1.0,0.0,482.611,2336.0,4001.0,0.0,0.0,0.0,0.907089,300812.622,539,0.01078,-4.744646,delay_sensitive
+grid_best_reward_npca_harq,Grid-best reward NPCA-HARQ,935,1.0,0.0,482.611,2336.0,4001.0,0.0,0.0,0.0,0.907089,300812.622,539,0.01078,-3.799291,throughput

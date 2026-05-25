@@ -1,0 +1,18 @@
+{
+  "intent_name": "delay_sensitive",
+  "weights": {
+    "throughput": 0.1,
+    "delay": 0.35,
+    "tail_delay": 0.25,
+    "packet_loss": 0.1,
+    "collision": 0.05,
+    "fairness": 0.05,
+    "energy": 0.05,
+    "legacy_protection": 0.05
+  },
+  "constraints": {
+    "packet_loss_max": 0.05,
+    "p95_delay_max": 300.0,
+    "legacy_degradation_max": 0.2
+  }
+}

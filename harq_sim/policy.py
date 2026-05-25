@@ -93,7 +93,7 @@ def select_npca_qsrc(sta: STA, slot: int, default_qsrc: int = DEFAULT_NPCA_QSRC)
     if sta.npca_failure_rate > 0.3:
         q += 1
 
-    pkt = sta.current_packet or sta._peek_head()
+    pkt = sta.current_packet or sta._peek_head(slot)
     if pkt is not None:
         dr = pkt.deadline_remaining(slot)
         if dr is not None and dr < URGENT_DEADLINE_THRESHOLD:
@@ -140,7 +140,7 @@ class NPCAHARQPolicy:
             One of the Action enum values.  NPCA_ACTIONS → transition to NPCA.
             All others → stay on primary channel.
         """
-        pkt = sta.current_packet or sta._peek_head()
+        pkt = sta.current_packet or sta._peek_head(slot)
         if pkt is None:
             return Action.STAY_PRIMARY
 

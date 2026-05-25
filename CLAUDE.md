@@ -104,6 +104,39 @@ intent_code가 reward와 state 양쪽에 포함되는 이유:
 
 ---
 
+## Figure 생성 규칙 (Step 9+)
+
+### 저장 포맷 — 필수 3종 동시 저장
+
+모든 Figure 생성 스크립트는 반드시 아래 3가지 포맷을 `manuscript/figure/` 에 저장해야 한다:
+
+```python
+# 각 run_step9_figN.py 내부 공통 패턴
+FIG_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "manuscript", "figure")
+os.makedirs(FIG_DIR, exist_ok=True)
+
+fig.savefig(os.path.join(FIG_DIR, f"{fig_name}.eps"), format="eps", bbox_inches="tight")
+fig.savefig(os.path.join(FIG_DIR, f"{fig_name}.png"), format="png", dpi=300, bbox_inches="tight")
+fig.savefig(os.path.join(FIG_DIR, f"{fig_name}.pdf"), format="pdf", bbox_inches="tight")
+```
+
+| 포맷 | 용도 | 해상도 |
+|---|---|---|
+| `.eps` | LaTeX (`\includegraphics`) 삽입 — 벡터 | — |
+| `.png` | 미리보기, Slack/이메일 공유 | 300 dpi |
+| `.pdf` | 고품질 벡터, PDF 논문 버전 | — |
+
+### Figure → 스크립트 → 계획 문서 매핑
+
+인덱스: `guidelines/step9_index.md`  
+상세 계획: `guidelines/step9/figN.md`  
+스크립트: `harq_sim/run_step9_figN.py`  
+출력 데이터: `results/step9/figN/data.csv`
+
+Figure를 수정해야 할 때는 해당 `guidelines/step9/figN.md`의 **수정 이력** 섹션에 변경 내용을 기록한다.
+
+---
+
 ## 파일 구조
 
 ```
