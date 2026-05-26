@@ -111,8 +111,35 @@ results/step9/fig6/
   data.csv            ← (snr_db, baseline, seed, metric, value)
 ```
 
+## 실험 결과 (results/step9/fig6/, 50000슬롯 × 3 seeds)
+
+| SNR (dB) | ARQ TP | HARQ-CC TP | HARQ−ARQ | MCS | p_success |
+|---|---|---|---|---|---|
+|  6 | 1633 | 1741 | +108 (+6.6%) | 0 | sigmoid(1)=0.731 |
+|  8 | 1080 | 1422 | +342 (+31.7%) | 1 | sigmoid(0)=0.500 |
+| 10 | 1978 | 2005 |  +27 (+1.4%) | 1 | sigmoid(2)=0.880 |
+| 12 | 1633 | 1741 | +108 (+6.6%) | 2 | sigmoid(1)=0.731 |
+| 14 | 1080 | 1422 | +342 (+31.7%) | 3 | sigmoid(0)=0.500 |
+| 16 | 1978 | 2005 |  +27 (+1.4%) | 3 | sigmoid(2)=0.880 |
+| 18 | 1633 | 1741 | +108 (+6.6%) | 4 | sigmoid(1)=0.731 |
+| 20 | 1080 | 1422 | +342 (+31.7%) | 5 | sigmoid(0)=0.500 |
+| 25 | 1978 | 2005 |  +27 (+1.4%) | 6 | sigmoid(2)=0.880 |
+| 30 | 2223 | 2223 |    0 (0.0%) | 7 | sigmoid(4)=0.982 |
+
+**핵심 관찰**:
+1. **주기적 반복 패턴**: SNR=6,12,18 / 8,14,20 / 10,16,25가 동일 결과.
+   원인: `p_success = sigmoid(SNR − threshold[MCS])` — MCS 임계값으로부터의 상대적 거리가 같으면 동일한 p_success. 시뮬레이터는 패킷 수(throughput)를 측정하므로 MCS 인덱스(=spectral efficiency 차이)가 반영되지 않음.
+2. **교차점 없음**: HARQ-CC가 전 SNR 범위에서 ARQ ≥ 동등. 교차점은 bits/slot 측정 시에만 나타남(ARQ가 높은 MCS 선택 → 더 많은 비트). 패킷 단위에서는 HARQ combining이 항상 도움(first TX 실패 시 combining으로 p_success 향상).
+3. **HARQ gain 최대**: p_success=0.5 (MCS threshold에 정확히 위치, SNR=8,14,20) — combining이 가장 큰 효과. +31.7% TP gain.
+4. **수렴**: SNR=30 (MCS7, p≈0.982) — 첫 전송 성공 확률이 거의 1이므로 combining 불필요 → HARQ=ARQ.
+
+**논문 해석**: "NPCA 환경에서 HARQ-CC combining은 ARQ 대비 패킷 처리량을 일관되게 향상시키며, first TX 성공률이 50%인 중간 SNR 구간에서 +32%의 최대 이득을 보인다. 고 SNR(≥30 dB)에서 두 방식이 수렴하는 것은 combining 기여가 사라짐을 의미한다."
+
+---
+
 ## 수정 이력
 
 | 날짜 | 변경 내용 |
 |---|---|
 | 2026-05-25 | 초안 작성 |
+| 2026-05-26 | `harq_sim/run_step9_fig6.py` 구현 및 full 실행 완료; 실험 결과 기록; 주기적 패턴(패킷 단위 측정) 및 교차점 없음 분석 추가 |

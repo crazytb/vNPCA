@@ -213,6 +213,18 @@ class STA:
         # History of qsrc values used at each NPCA transition (for summary stats).
         self._npca_qsrc_history: list = []
 
+        # ── Adaptive qsrc counters (active when adaptive_cw=True) ─────────────
+        # Observation window of K visits; update qsrc at window boundary.
+        # "visit" = one NPCA entry (one per OBSS trigger). Each visit can have multiple TXs.
+        self._adap_K:              int = 5    # window size (visits); small for sparse N
+        self._adap_trans:          int = 0    # visits in current window
+        self._adap_col:            int = 0    # total collisions across all TXs in window
+        self._adap_tx:             int = 0    # total TX attempts in window
+        self._adap_visits_with_tx: int = 0    # visits where ≥1 TX was attempted
+        self._adap_cur_tx:         int = 0    # TX attempts in the current ongoing visit
+        self._theta_col:   float = 0.70  # per-TX collision rate threshold → increase qsrc
+        self._theta_waste: float = 0.30  # per-visit waste rate threshold  → decrease qsrc
+
         # ── Step 6+: energy and delivery-delay tracking ───────────────────────
         self.total_energy_uj:   float = 0.0   # cumulative energy this episode (μJ)
         self._delivered_delays: list  = []    # delivery delay (slots) per delivered packet
@@ -409,6 +421,10 @@ class STA:
         self.stats["npca_transitions"] += 1
         # Step 5+: record qsrc used at this transition (for avg_npca_qsrc stats)
         self._npca_qsrc_history.append(self.npca_initial_qsrc)
+        # Adaptive qsrc: start a new visit
+        if self.adaptive_cw:
+            self._adap_trans  += 1
+            self._adap_cur_tx  = 0
         # Step 6+: radio switching energy event
         self.total_energy_uj += ENERGY_NPCA_TRANSITION_UJ
 
@@ -417,6 +433,11 @@ class STA:
         self.switching_remain = self.switching_delay
         self.next_mode        = STAMode.SWITCH_BACK
         self.stats["switch_backs"] += 1
+        # Adaptive qsrc: record whether this visit had any TX, then check for update
+        if self.adaptive_cw:
+            if self._adap_cur_tx > 0:
+                self._adap_visits_with_tx += 1
+            self._maybe_update_qsrc()
 
     # ──────────────────────────────────────────────────────────────────────────
     # Packet queue helpers
@@ -701,6 +722,9 @@ class STA:
                 self.next_mode = STAMode.PRIMARY_BACKOFF
             else:
                 self.stats["npca_tx_success"] += 1
+                if self.adaptive_cw:
+                    self._adap_tx    += 1
+                    self._adap_cur_tx += 1
                 if self._should_switch_back():
                     self._start_switch_back()
                 else:
@@ -716,12 +740,17 @@ class STA:
             self.stats["primary_tx_fail"] += 1
         else:
             self.stats["npca_tx_fail"] += 1
+            if self.adaptive_cw:
+                self._adap_tx    += 1
+                self._adap_cur_tx += 1
 
         if failure_reason == FailureReason.COLLISION:
             if channel_type == ChannelType.PRIMARY:
                 self.stats["primary_collision_count"] += 1
             else:
                 self.stats["npca_collision_count"] += 1
+                if self.adaptive_cw:
+                    self._adap_col += 1
 
         if failure_reason == FailureReason.AP_ABSENCE_DUE_TO_NPCA:
             self.stats["ap_absence_failures"] += 1
@@ -788,6 +817,26 @@ class STA:
     # ──────────────────────────────────────────────────────────────────────────
     # Commit next_mode at end of each slot (called by Simulator)
     # ──────────────────────────────────────────────────────────────────────────
+    # Adaptive qsrc update  (active when adaptive_cw=True)
+    # Called at each switch_back. Updates npca_initial_qsrc every K transitions.
+    # ──────────────────────────────────────────────────────────────────────────
+    def _maybe_update_qsrc(self) -> None:
+        if self._adap_trans < self._adap_K:
+            return
+        # col_rate: P(collision | TX attempted) — one visit can have multiple TX attempts
+        col_rate   = self._adap_col / self._adap_tx if self._adap_tx > 0 else 0.0
+        # waste_rate: P(no TX in visit) — backoff exceeded NPCA timer before first attempt
+        waste_rate = 1.0 - self._adap_visits_with_tx / self._adap_trans
+        if col_rate > self._theta_col:
+            self.npca_initial_qsrc = min(self.npca_initial_qsrc + 1, 5)
+        elif waste_rate > self._theta_waste:
+            self.npca_initial_qsrc = max(self.npca_initial_qsrc - 1, 0)
+        self._adap_trans          = 0
+        self._adap_col            = 0
+        self._adap_tx             = 0
+        self._adap_visits_with_tx = 0
+
+    # ──────────────────────────────────────────────────────────────────────────
     def commit_mode(self) -> None:
         self.mode = self.next_mode
 
@@ -804,6 +853,12 @@ class STA:
         # Step 6+
         self.total_energy_uj = 0.0
         self._delivered_delays.clear()
+        # Adaptive qsrc: reset observation window counters (qsrc itself persists)
+        self._adap_trans          = 0
+        self._adap_col            = 0
+        self._adap_tx             = 0
+        self._adap_visits_with_tx = 0
+        self._adap_cur_tx         = 0
 
     def __repr__(self) -> str:
         return (

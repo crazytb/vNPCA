@@ -1,0 +1,9 @@
+ppdu_type,ppdu,qsrc,seed,aggregate_throughput
+short,10,0,42,222
+short,10,1,42,220
+short,10,2,42,216
+short,10,3,42,219
+long,50,0,42,53
+long,50,1,42,50
+long,50,2,42,46
+long,50,3,42,50

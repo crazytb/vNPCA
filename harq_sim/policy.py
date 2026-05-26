@@ -163,9 +163,7 @@ class NPCAHARQPolicy:
 
         if npca_delay < primary_delay:
             # NPCA channel offers faster access → switch
-            # Step 5: if adaptive CW enabled, update sta.npca_initial_qsrc before transition
-            if self.adaptive_cw:
-                sta.npca_initial_qsrc = select_npca_qsrc(sta, slot, sta.npca_initial_qsrc)
+            # Adaptive CW is now handled in STA._maybe_update_qsrc() (Step 9+)
             if harq_valid:
                 return Action.HARQ_RETX_NPCA
             elif has_retry:
