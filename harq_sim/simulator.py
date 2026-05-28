@@ -172,7 +172,7 @@ class Simulator:
         per_channel: Dict[int, List[Tuple[STA, TxRequest]]] = defaultdict(list)
         for sta, req in tx_reqs:
             ch_id = (
-                self._primary_ch_id
+                sta.primary_channel.channel_id  # use STA's actual primary (supports native NPCA STAs)
                 if req.channel_type == ChannelType.PRIMARY
                 else self._npca_ch_id
             )
@@ -183,25 +183,22 @@ class Simulator:
         failure_results: List[Tuple[STA, FailureReason, ChannelType]] = []
 
         for ch_id, reqs in per_channel.items():
-            ch     = self._ch.get(ch_id)
-            ch_type = (
-                ChannelType.PRIMARY if ch_id == self._primary_ch_id else ChannelType.NPCA
-            )
+            ch = self._ch.get(ch_id)
             if ch is None:
                 continue
 
             if len(reqs) == 1:
                 sta, req = reqs[0]
-                if ch_type == ChannelType.PRIMARY and not sta.ap_on_primary:
+                if req.channel_type == ChannelType.PRIMARY and not sta.ap_on_primary:
                     # AP is on NPCA — uplink from primary fails (guidelines §7)
-                    failure_results.append((sta, FailureReason.AP_ABSENCE_DUE_TO_NPCA, ch_type))
+                    failure_results.append((sta, FailureReason.AP_ABSENCE_DUE_TO_NPCA, req.channel_type))
                 else:
                     # Success start: occupy channel; STA will self-report when done
                     ch.occupy_intra(slot, req.duration)
             else:
                 # Collision: immediate failure for all contestants
                 for sta, req in reqs:
-                    failure_results.append((sta, FailureReason.COLLISION, ch_type))
+                    failure_results.append((sta, FailureReason.COLLISION, req.channel_type))
 
         # Dispatch failures immediately
         for sta, reason, ch_type in failure_results:

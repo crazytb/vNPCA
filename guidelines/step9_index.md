@@ -17,6 +17,8 @@ LLM/intent 기여는 별도 논문으로 분리.
 | Fig 6 | HARQ combining gain vs Higher MCS crossover (부록/참고) | `harq_sim/run_step9_fig6.py` | [fig6.md](step9/fig6.md) | ✅ 완료 |
 | Fig 7 | PPDU Truncation × qsrc* 직교적 기여 분리 (Extension) | `harq_sim/run_step9_fig7.py` | [fig7.md](step9/fig7.md) | ✅ 완료 |
 | Fig 8 | Cross-Channel HARQ Combining 비교 (Extension) | `harq_sim/run_step9_fig8.py` | [fig8.md](step9/fig8.md) | ✅ 완료 |
+| Fig 9 | Native NPCA STA 환경에서의 qsrc* 이동 관찰 | `harq_sim/run_step9_fig9.py` | [fig9.md](step9/fig9.md) | ✅ 완료 |
+| Fig 10 | qsrc*(W_eff) 의존성 — OBSS duration sweep (Fig 3 보완) | `harq_sim/run_step9_fig10.py` | [fig10.md](step9/fig10.md) | ✅ 완료 |
 
 상태: ⬜ 미구현 / 🔄 진행 중 / ✅ 완료
 
@@ -31,6 +33,8 @@ LLM/intent 기여는 별도 논문으로 분리.
 § Algorithm   : Adaptive qsrc (col_rate + waste_rate 기반)
 § Evaluation  : Fig 4 (adaptive vs fixed vs oracle)
 § Extension   : Fig 5 (per-STA heterogeneity), Fig 6 (HARQ interaction), Fig 8 (cross-channel HARQ)
+§ Extension 2 : Fig 9 (native NPCA contention — qsrc* generalization)
+§ Analysis+  : Fig 10 (qsrc*(W_eff) — W 의존성, Fig 3 보완)
 ```
 
 ---
