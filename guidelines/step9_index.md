@@ -19,6 +19,8 @@ LLM/intent 기여는 별도 논문으로 분리.
 | Fig 8 | Cross-Channel HARQ Combining 비교 (Extension) | `harq_sim/run_step9_fig8.py` | [fig8.md](step9/fig8.md) | ✅ 완료 |
 | Fig 9 | Native NPCA STA 환경에서의 qsrc* 이동 관찰 | `harq_sim/run_step9_fig9.py` | [fig9.md](step9/fig9.md) | ✅ 완료 |
 | Fig 10 | qsrc*(W_eff) 의존성 — OBSS duration sweep (Fig 3 보완) | `harq_sim/run_step9_fig10.py` | [fig10.md](step9/fig10.md) | ✅ 완료 |
+| Fig 11 | PPDU duration 효과 — W_avail = W−PPDU 통합 이론 검증 | `harq_sim/run_step9_fig11.py` | [fig11.md](step9/fig11.md) | ⬜ 미구현 |
+| Fig 12 | Multi-Round 동역학 — K = W_avail/PPDU 특성화 및 collapse 경계 | `harq_sim/run_step9_fig12.py` | [fig12.md](step9/fig12.md) | ✅ 완료 |
 
 상태: ⬜ 미구현 / 🔄 진행 중 / ✅ 완료
 
@@ -35,6 +37,8 @@ LLM/intent 기여는 별도 논문으로 분리.
 § Extension   : Fig 5 (per-STA heterogeneity), Fig 6 (HARQ interaction), Fig 8 (cross-channel HARQ)
 § Extension 2 : Fig 9 (native NPCA contention — qsrc* generalization)
 § Analysis+  : Fig 10 (qsrc*(W_eff) — W 의존성, Fig 3 보완)
+              Fig 11 (qsrc*(W_avail=W−PPDU) — PPDU 포함 통합 이론 완성)
+              Fig 12 (K = W_avail/PPDU — multi-round collapse 경계 검증)
 ```
 
 ---
@@ -83,4 +87,8 @@ python harq_sim/run_step9_fig4.py --out-dir results/step9/fig4
 # Phase 3: 확장
 python harq_sim/run_step9_fig5.py --out-dir results/step9/fig5
 python harq_sim/run_step9_fig6.py --out-dir results/step9/fig6
+
+# Phase 4: PPDU 통합 이론
+python harq_sim/run_step9_fig11.py --out-dir results/step9/fig11
+python harq_sim/run_step9_fig12.py --out-dir results/step9/fig12
 ```
